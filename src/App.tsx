@@ -68,7 +68,7 @@ function Practice({ data }: { data: LoadedData }) {
   return (
     <div className={`app ${refOpen ? 'with-ref' : ''}`}>
       <header className="topbar">
-        <h1>PyTorch Practice</h1>
+        <h1>Programming Assignments Practice</h1>
         <div className="topbar-right">
           <span className="stats" title="Questions answered correctly on the first check">
             First-try correct: <strong>{stats.firstTry}</strong> / {stats.attempted}

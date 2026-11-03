@@ -1,4 +1,4 @@
-# PyTorch Practice
+# Programming Assignments Practice
 
 Static React + TypeScript app for practising PyTorch code from your own scripts.
 No backend — questions and the PyTorch reference are JSON files fetched at runtime.
