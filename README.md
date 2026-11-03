@@ -31,7 +31,7 @@ Requires Node >= 22.18 (the validator imports the app's TS normaliser directly).
 
 Schemas: [`schema/question.schema.json`](schema/question.schema.json),
 [`schema/reference.schema.json`](schema/reference.schema.json).
-The files in `public/data` are samples; replace them with your own.
+`public/data` holds the questions generated from the scripts in `pa_source_files/`; the test fixture in `src/__tests__/fixtures/` is only used by the tests.
 
 ## Answer matching
 

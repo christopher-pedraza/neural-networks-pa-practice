@@ -1,4 +1,10 @@
 {
-  "questionFiles": ["questions/sample.jsonl"],
+  "questionFiles": [
+    "questions/p1_student.jsonl",
+    "questions/p2_student.jsonl",
+    "questions/pa3_notebook.jsonl",
+    "questions/pa4_notebook.jsonl",
+    "questions/pa5_notebook.jsonl"
+  ],
   "reference": "pytorch_reference.json"
 }

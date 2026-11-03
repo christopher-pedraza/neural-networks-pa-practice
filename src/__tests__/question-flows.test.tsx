@@ -8,7 +8,7 @@ import { matchesAny } from '../lib/normalize'
 import { parseQuestions } from '../lib/data'
 import type { Question, ReferenceFile } from '../types'
 
-const questions = parseQuestions(readFileSync('public/data/questions/sample.jsonl', 'utf8'), 'x.jsonl')
+const questions = parseQuestions(readFileSync('src/__tests__/fixtures/sample.jsonl', 'utf8'), 'x.jsonl')
 const reference = JSON.parse(readFileSync('public/data/pytorch_reference.json', 'utf8')) as ReferenceFile
 const get = (id: string) => questions.find((q) => q.id === id) as Question
 
