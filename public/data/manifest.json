@@ -1,0 +1,4 @@
+{
+  "questionFiles": ["questions/sample.jsonl"],
+  "reference": "pytorch_reference.json"
+}

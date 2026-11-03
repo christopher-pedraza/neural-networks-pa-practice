@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "reference.schema.json",
+  "title": "PyTorch reference file (public/data/pytorch_reference.json)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["entries"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "string", "description": "PyTorch version the notes were written against." },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "kind", "summary"],
+        "properties": {
+          "name": { "type": "string", "description": "Fully qualified & unique, e.g. 'torch.nn.Linear', 'torch.Tensor.backward'." },
+          "aliases": { "type": "array", "items": { "type": "string" }, "description": "Other spellings you want searchable, e.g. 'nn.Linear', 'Linear'." },
+          "kind": { "enum": ["function", "class", "method", "attribute", "module", "context_manager"] },
+          "module": { "type": "string", "description": "Grouping shown in the UI, e.g. 'torch.nn', 'torch.optim'." },
+          "signature": { "type": "string", "description": "e.g. 'torch.nn.Linear(in_features, out_features, bias=True)'" },
+          "summary": { "type": "string", "description": "One or two sentences." },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name", "description"],
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" },
+                "default": { "type": "string" },
+                "description": { "type": "string" }
+              }
+            }
+          },
+          "returns": { "type": "string" },
+          "example": { "type": "string", "description": "Short runnable Python snippet." },
+          "notes": { "type": "array", "items": { "type": "string" }, "description": "Gotchas, e.g. 'zero_grad() must be called before backward()'." },
+          "see_also": { "type": "array", "items": { "type": "string" }, "description": "Other entry names." },
+          "tags": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

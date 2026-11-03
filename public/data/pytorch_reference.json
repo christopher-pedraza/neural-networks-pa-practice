@@ -1,0 +1,171 @@
+{
+  "version": "2.x",
+  "entries": [
+    {
+      "name": "torch.nn.Linear",
+      "aliases": ["nn.Linear", "Linear"],
+      "kind": "class",
+      "module": "torch.nn",
+      "signature": "torch.nn.Linear(in_features, out_features, bias=True)",
+      "summary": "Fully connected layer: y = x @ W.T + b. Applied to the last dimension of the input.",
+      "parameters": [
+        { "name": "in_features", "type": "int", "description": "Size of each input sample (last dim)." },
+        { "name": "out_features", "type": "int", "description": "Size of each output sample." },
+        { "name": "bias", "type": "bool", "default": "True", "description": "Learn an additive bias." }
+      ],
+      "returns": "Tensor of shape (*, out_features).",
+      "example": "layer = nn.Linear(784, 10)\nlogits = layer(torch.randn(32, 784))  # (32, 10)",
+      "notes": ["Input must be (*, in_features); flatten images first.", "layer.weight has shape (out_features, in_features)."],
+      "see_also": ["torch.flatten"],
+      "tags": ["layer", "dense"]
+    },
+    {
+      "name": "torch.nn.MSELoss",
+      "aliases": ["nn.MSELoss", "MSELoss"],
+      "kind": "class",
+      "module": "torch.nn",
+      "signature": "torch.nn.MSELoss(reduction='mean')",
+      "summary": "Mean squared error between prediction and target. Call as criterion(pred, target).",
+      "parameters": [
+        { "name": "reduction", "type": "str", "default": "'mean'", "description": "'mean', 'sum' or 'none'." }
+      ],
+      "returns": "Scalar tensor (for 'mean'/'sum').",
+      "example": "criterion = nn.MSELoss()\nloss = criterion(pred, y)",
+      "notes": ["pred and target should have the same shape, otherwise broadcasting may silently give a wrong loss."],
+      "tags": ["loss", "regression"]
+    },
+    {
+      "name": "torch.nn.CrossEntropyLoss",
+      "aliases": ["nn.CrossEntropyLoss", "CrossEntropyLoss"],
+      "kind": "class",
+      "module": "torch.nn",
+      "signature": "torch.nn.CrossEntropyLoss(weight=None, ignore_index=-100, reduction='mean', label_smoothing=0.0)",
+      "summary": "Softmax + negative log-likelihood in one. Takes raw logits and integer class indices.",
+      "parameters": [
+        { "name": "weight", "type": "Tensor", "default": "None", "description": "Per-class rescaling weights." },
+        { "name": "label_smoothing", "type": "float", "default": "0.0", "description": "Smoothing factor in [0, 1]." }
+      ],
+      "returns": "Scalar tensor.",
+      "example": "criterion = nn.CrossEntropyLoss()\nloss = criterion(logits, labels)  # logits (N, C), labels (N,) int64",
+      "notes": ["Do NOT apply softmax before this loss."],
+      "tags": ["loss", "classification"]
+    },
+    {
+      "name": "torch.optim.SGD",
+      "aliases": ["optim.SGD", "SGD"],
+      "kind": "class",
+      "module": "torch.optim",
+      "signature": "torch.optim.SGD(params, lr=0.001, momentum=0, dampening=0, weight_decay=0, nesterov=False)",
+      "summary": "Stochastic gradient descent optimizer, optionally with momentum.",
+      "parameters": [
+        { "name": "params", "type": "iterable", "description": "Tensors to optimise, typically model.parameters()." },
+        { "name": "lr", "type": "float", "default": "0.001", "description": "Learning rate." },
+        { "name": "momentum", "type": "float", "default": "0", "description": "Momentum factor." }
+      ],
+      "example": "optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)",
+      "see_also": ["torch.optim.Optimizer.zero_grad", "torch.optim.Optimizer.step"],
+      "tags": ["optimizer"]
+    },
+    {
+      "name": "torch.optim.Optimizer.zero_grad",
+      "aliases": ["optimizer.zero_grad", "zero_grad"],
+      "kind": "method",
+      "module": "torch.optim",
+      "signature": "Optimizer.zero_grad(set_to_none=True)",
+      "summary": "Resets the gradients of all tensors the optimizer manages.",
+      "parameters": [
+        { "name": "set_to_none", "type": "bool", "default": "True", "description": "Set .grad to None instead of filling with zeros (faster, less memory)." }
+      ],
+      "notes": ["Gradients ACCUMULATE across backward() calls; call this once per step, before backward()."],
+      "see_also": ["torch.Tensor.backward"],
+      "tags": ["optimizer", "training-loop"]
+    },
+    {
+      "name": "torch.optim.Optimizer.step",
+      "aliases": ["optimizer.step", "step"],
+      "kind": "method",
+      "module": "torch.optim",
+      "signature": "Optimizer.step(closure=None)",
+      "summary": "Performs one parameter update using the gradients currently stored in .grad.",
+      "notes": ["Call after loss.backward()."],
+      "tags": ["optimizer", "training-loop"]
+    },
+    {
+      "name": "torch.Tensor.backward",
+      "aliases": ["loss.backward", "backward"],
+      "kind": "method",
+      "module": "torch",
+      "signature": "Tensor.backward(gradient=None, retain_graph=None, create_graph=False)",
+      "summary": "Computes gradients of this tensor w.r.t. graph leaves and accumulates them into their .grad.",
+      "parameters": [
+        { "name": "gradient", "type": "Tensor", "default": "None", "description": "Required if the tensor is not a scalar." },
+        { "name": "retain_graph", "type": "bool", "default": "None", "description": "Keep the graph so backward can be called again." }
+      ],
+      "notes": ["Usually called on a scalar loss.", "Accumulates into .grad; it does not overwrite."],
+      "tags": ["autograd", "training-loop"]
+    },
+    {
+      "name": "torch.no_grad",
+      "aliases": ["no_grad", "with torch.no_grad()"],
+      "kind": "context_manager",
+      "module": "torch",
+      "signature": "with torch.no_grad(): ...",
+      "summary": "Disables gradient tracking inside the block. Saves memory and time during inference.",
+      "example": "with torch.no_grad():\n    preds = model(x)",
+      "notes": ["Does NOT change layer behaviour (dropout, batch-norm); use model.eval() for that."],
+      "see_also": ["torch.nn.Module.eval"],
+      "tags": ["autograd", "evaluation"]
+    },
+    {
+      "name": "torch.nn.Module.eval",
+      "aliases": ["model.eval", "eval"],
+      "kind": "method",
+      "module": "torch.nn",
+      "signature": "Module.eval()",
+      "summary": "Puts the module and its children in evaluation mode (dropout off, batch-norm uses running statistics). Equivalent to train(False).",
+      "returns": "self",
+      "notes": ["Call model.train() to go back to training mode."],
+      "see_also": ["torch.no_grad"],
+      "tags": ["evaluation"]
+    },
+    {
+      "name": "torch.Tensor.argmax",
+      "aliases": ["argmax", "torch.argmax"],
+      "kind": "method",
+      "module": "torch",
+      "signature": "Tensor.argmax(dim=None, keepdim=False)",
+      "summary": "Index of the maximum value along a dimension. With dim=None the tensor is flattened first.",
+      "parameters": [
+        { "name": "dim", "type": "int", "default": "None", "description": "Dimension to reduce." },
+        { "name": "keepdim", "type": "bool", "default": "False", "description": "Keep the reduced dim with size 1." }
+      ],
+      "example": "pred = logits.argmax(dim=1)  # (N, C) -> (N,)",
+      "tags": ["reduction", "classification"]
+    },
+    {
+      "name": "torch.flatten",
+      "aliases": ["flatten", "Tensor.flatten", "x.flatten"],
+      "kind": "function",
+      "module": "torch",
+      "signature": "torch.flatten(input, start_dim=0, end_dim=-1)",
+      "summary": "Flattens dimensions start_dim..end_dim into one. Use start_dim=1 to keep the batch dimension.",
+      "parameters": [
+        { "name": "start_dim", "type": "int", "default": "0", "description": "First dim to flatten." },
+        { "name": "end_dim", "type": "int", "default": "-1", "description": "Last dim to flatten." }
+      ],
+      "example": "x = torch.randn(8, 1, 28, 28)\nx.flatten(1).shape  # torch.Size([8, 784])",
+      "tags": ["shape"]
+    },
+    {
+      "name": "torch.Tensor.view",
+      "aliases": ["view", "x.view", "reshape", "Tensor.reshape"],
+      "kind": "method",
+      "module": "torch",
+      "signature": "Tensor.view(*shape)",
+      "summary": "Returns a tensor with the same data and a new shape. One dimension may be -1 (inferred).",
+      "example": "x.view(x.size(0), -1)",
+      "notes": ["Requires contiguous memory; use reshape() if unsure."],
+      "tags": ["shape"]
+    }
+  ]
+}
