@@ -2,170 +2,4832 @@
   "version": "2.x",
   "entries": [
     {
-      "name": "torch.nn.Linear",
-      "aliases": ["nn.Linear", "Linear"],
+      "name": "torch.Generator",
+      "aliases": [
+        "Generator"
+      ],
       "kind": "class",
-      "module": "torch.nn",
-      "signature": "torch.nn.Linear(in_features, out_features, bias=True)",
-      "summary": "Fully connected layer: y = x @ W.T + b. Applied to the last dimension of the input.",
-      "parameters": [
-        { "name": "in_features", "type": "int", "description": "Size of each input sample (last dim)." },
-        { "name": "out_features", "type": "int", "description": "Size of each output sample." },
-        { "name": "bias", "type": "bool", "default": "True", "description": "Learn an additive bias." }
-      ],
-      "returns": "Tensor of shape (*, out_features).",
-      "example": "layer = nn.Linear(784, 10)\nlogits = layer(torch.randn(32, 784))  # (32, 10)",
-      "notes": ["Input must be (*, in_features); flatten images first.", "layer.weight has shape (out_features, in_features)."],
-      "see_also": ["torch.flatten"],
-      "tags": ["layer", "dense"]
-    },
-    {
-      "name": "torch.nn.MSELoss",
-      "aliases": ["nn.MSELoss", "MSELoss"],
-      "kind": "class",
-      "module": "torch.nn",
-      "signature": "torch.nn.MSELoss(reduction='mean')",
-      "summary": "Mean squared error between prediction and target. Call as criterion(pred, target).",
-      "parameters": [
-        { "name": "reduction", "type": "str", "default": "'mean'", "description": "'mean', 'sum' or 'none'." }
-      ],
-      "returns": "Scalar tensor (for 'mean'/'sum').",
-      "example": "criterion = nn.MSELoss()\nloss = criterion(pred, y)",
-      "notes": ["pred and target should have the same shape, otherwise broadcasting may silently give a wrong loss."],
-      "tags": ["loss", "regression"]
-    },
-    {
-      "name": "torch.nn.CrossEntropyLoss",
-      "aliases": ["nn.CrossEntropyLoss", "CrossEntropyLoss"],
-      "kind": "class",
-      "module": "torch.nn",
-      "signature": "torch.nn.CrossEntropyLoss(weight=None, ignore_index=-100, reduction='mean', label_smoothing=0.0)",
-      "summary": "Softmax + negative log-likelihood in one. Takes raw logits and integer class indices.",
-      "parameters": [
-        { "name": "weight", "type": "Tensor", "default": "None", "description": "Per-class rescaling weights." },
-        { "name": "label_smoothing", "type": "float", "default": "0.0", "description": "Smoothing factor in [0, 1]." }
-      ],
-      "returns": "Scalar tensor.",
-      "example": "criterion = nn.CrossEntropyLoss()\nloss = criterion(logits, labels)  # logits (N, C), labels (N,) int64",
-      "notes": ["Do NOT apply softmax before this loss."],
-      "tags": ["loss", "classification"]
-    },
-    {
-      "name": "torch.optim.SGD",
-      "aliases": ["optim.SGD", "SGD"],
-      "kind": "class",
-      "module": "torch.optim",
-      "signature": "torch.optim.SGD(params, lr=0.001, momentum=0, dampening=0, weight_decay=0, nesterov=False)",
-      "summary": "Stochastic gradient descent optimizer, optionally with momentum.",
-      "parameters": [
-        { "name": "params", "type": "iterable", "description": "Tensors to optimise, typically model.parameters()." },
-        { "name": "lr", "type": "float", "default": "0.001", "description": "Learning rate." },
-        { "name": "momentum", "type": "float", "default": "0", "description": "Momentum factor." }
-      ],
-      "example": "optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)",
-      "see_also": ["torch.optim.Optimizer.zero_grad", "torch.optim.Optimizer.step"],
-      "tags": ["optimizer"]
-    },
-    {
-      "name": "torch.optim.Optimizer.zero_grad",
-      "aliases": ["optimizer.zero_grad", "zero_grad"],
-      "kind": "method",
-      "module": "torch.optim",
-      "signature": "Optimizer.zero_grad(set_to_none=True)",
-      "summary": "Resets the gradients of all tensors the optimizer manages.",
-      "parameters": [
-        { "name": "set_to_none", "type": "bool", "default": "True", "description": "Set .grad to None instead of filling with zeros (faster, less memory)." }
-      ],
-      "notes": ["Gradients ACCUMULATE across backward() calls; call this once per step, before backward()."],
-      "see_also": ["torch.Tensor.backward"],
-      "tags": ["optimizer", "training-loop"]
-    },
-    {
-      "name": "torch.optim.Optimizer.step",
-      "aliases": ["optimizer.step", "step"],
-      "kind": "method",
-      "module": "torch.optim",
-      "signature": "Optimizer.step(closure=None)",
-      "summary": "Performs one parameter update using the gradients currently stored in .grad.",
-      "notes": ["Call after loss.backward()."],
-      "tags": ["optimizer", "training-loop"]
-    },
-    {
-      "name": "torch.Tensor.backward",
-      "aliases": ["loss.backward", "backward"],
-      "kind": "method",
       "module": "torch",
-      "signature": "Tensor.backward(gradient=None, retain_graph=None, create_graph=False)",
-      "summary": "Computes gradients of this tensor w.r.t. graph leaves and accumulates them into their .grad.",
-      "parameters": [
-        { "name": "gradient", "type": "Tensor", "default": "None", "description": "Required if the tensor is not a scalar." },
-        { "name": "retain_graph", "type": "bool", "default": "None", "description": "Keep the graph so backward can be called again." }
+      "summary": "Random number generator object that can be passed to randperm, DataLoader, etc., to get reproducible randomness independent of the global seed.",
+      "signature": "torch.Generator(device='cpu')",
+      "returns": "A Generator; .manual_seed(seed) returns the generator itself so calls can be chained.",
+      "example": "g = torch.Generator().manual_seed(0)\ntorch.randperm(5, generator=g)",
+      "see_also": [
+        "torch.manual_seed",
+        "torch.randperm"
       ],
-      "notes": ["Usually called on a scalar loss.", "Accumulates into .grad; it does not overwrite."],
-      "tags": ["autograd", "training-loop"]
+      "tags": [
+        "random",
+        "reproducibility"
+      ]
     },
     {
-      "name": "torch.no_grad",
-      "aliases": ["no_grad", "with torch.no_grad()"],
-      "kind": "context_manager",
-      "module": "torch",
-      "signature": "with torch.no_grad(): ...",
-      "summary": "Disables gradient tracking inside the block. Saves memory and time during inference.",
-      "example": "with torch.no_grad():\n    preds = model(x)",
-      "notes": ["Does NOT change layer behaviour (dropout, batch-norm); use model.eval() for that."],
-      "see_also": ["torch.nn.Module.eval"],
-      "tags": ["autograd", "evaluation"]
+      "name": "torch.Tensor.T",
+      "aliases": [
+        "x.T",
+        "x.mT",
+        "x.t()",
+        "mT"
+      ],
+      "kind": "attribute",
+      "module": "torch.Tensor",
+      "summary": "Transpose of a 2-D tensor (x.mT transposes the last two dims of any batch; x.t() is the method).",
+      "returns": "Tensor view.",
+      "example": "scores = A @ B.T  # (N, D) @ (D, M)",
+      "notes": [
+        "On tensors with more than 2 dims, .T reverses ALL dims (deprecated) - use .mT or transpose(-2, -1)."
+      ],
+      "see_also": [
+        "torch.Tensor.transpose"
+      ],
+      "tags": [
+        "shapes"
+      ]
     },
     {
-      "name": "torch.nn.Module.eval",
-      "aliases": ["model.eval", "eval"],
+      "name": "torch.Tensor.abs",
+      "aliases": [
+        "torch.abs",
+        "abs"
+      ],
       "kind": "method",
-      "module": "torch.nn",
-      "signature": "Module.eval()",
-      "summary": "Puts the module and its children in evaluation mode (dropout off, batch-norm uses running statistics). Equivalent to train(False).",
-      "returns": "self",
-      "notes": ["Call model.train() to go back to training mode."],
-      "see_also": ["torch.no_grad"],
-      "tags": ["evaluation"]
+      "module": "torch.Tensor",
+      "summary": "Element-wise absolute value.",
+      "signature": "Tensor.abs()",
+      "returns": "Tensor.",
+      "example": "diff.abs().max()",
+      "tags": [
+        "math"
+      ]
+    },
+    {
+      "name": "torch.Tensor.any",
+      "aliases": [
+        "torch.any",
+        "any"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "True if any element is True (optionally along a dim).",
+      "signature": "Tensor.any(dim=None)",
+      "returns": "bool Tensor.",
+      "example": "if (y == k).any(): ...",
+      "tags": [
+        "masking"
+      ]
     },
     {
       "name": "torch.Tensor.argmax",
-      "aliases": ["argmax", "torch.argmax"],
+      "aliases": [
+        "argmax",
+        "torch.argmax"
+      ],
       "kind": "method",
       "module": "torch",
       "signature": "Tensor.argmax(dim=None, keepdim=False)",
       "summary": "Index of the maximum value along a dimension. With dim=None the tensor is flattened first.",
       "parameters": [
-        { "name": "dim", "type": "int", "default": "None", "description": "Dimension to reduce." },
-        { "name": "keepdim", "type": "bool", "default": "False", "description": "Keep the reduced dim with size 1." }
+        {
+          "name": "dim",
+          "type": "int",
+          "default": "None",
+          "description": "Dimension to reduce."
+        },
+        {
+          "name": "keepdim",
+          "type": "bool",
+          "default": "False",
+          "description": "Keep the reduced dim with size 1."
+        }
       ],
       "example": "pred = logits.argmax(dim=1)  # (N, C) -> (N,)",
-      "tags": ["reduction", "classification"]
+      "tags": [
+        "reduction",
+        "classification"
+      ]
     },
     {
-      "name": "torch.flatten",
-      "aliases": ["flatten", "Tensor.flatten", "x.flatten"],
-      "kind": "function",
-      "module": "torch",
-      "signature": "torch.flatten(input, start_dim=0, end_dim=-1)",
-      "summary": "Flattens dimensions start_dim..end_dim into one. Use start_dim=1 to keep the batch dimension.",
-      "parameters": [
-        { "name": "start_dim", "type": "int", "default": "0", "description": "First dim to flatten." },
-        { "name": "end_dim", "type": "int", "default": "-1", "description": "Last dim to flatten." }
+      "name": "torch.Tensor.argsort",
+      "aliases": [
+        "torch.argsort",
+        "argsort"
       ],
-      "example": "x = torch.randn(8, 1, 28, 28)\nx.flatten(1).shape  # torch.Size([8, 784])",
-      "tags": ["shape"]
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Indices that would sort the tensor.",
+      "signature": "Tensor.argsort(dim=-1, descending=False)",
+      "returns": "LongTensor.",
+      "example": "ranks = scores.argsort().argsort() + 1",
+      "notes": [
+        "Applying argsort twice gives each element's rank."
+      ],
+      "see_also": [
+        "torch.topk"
+      ],
+      "tags": [
+        "sorting"
+      ]
+    },
+    {
+      "name": "torch.Tensor.backward",
+      "aliases": [
+        "loss.backward",
+        "backward"
+      ],
+      "kind": "method",
+      "module": "torch",
+      "signature": "Tensor.backward(gradient=None, retain_graph=None, create_graph=False)",
+      "summary": "Computes gradients of this tensor w.r.t. graph leaves and accumulates them into their .grad.",
+      "parameters": [
+        {
+          "name": "gradient",
+          "type": "Tensor",
+          "default": "None",
+          "description": "Required if the tensor is not a scalar."
+        },
+        {
+          "name": "retain_graph",
+          "type": "bool",
+          "default": "None",
+          "description": "Keep the graph so backward can be called again."
+        }
+      ],
+      "notes": [
+        "Usually called on a scalar loss.",
+        "Accumulates into .grad; it does not overwrite."
+      ],
+      "tags": [
+        "autograd",
+        "training-loop"
+      ]
+    },
+    {
+      "name": "torch.Tensor.chunk",
+      "aliases": [
+        "x.chunk",
+        ".chunk",
+        "tensor.chunk",
+        "chunk"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Splits a tensor into a given NUMBER of chunks along a dimension (the last may be smaller).",
+      "signature": "Tensor.chunk(chunks, dim=0)",
+      "parameters": [
+        {
+          "name": "chunks",
+          "type": "int",
+          "description": "Number of pieces."
+        },
+        {
+          "name": "dim",
+          "type": "int",
+          "default": "0",
+          "description": "Dimension to split."
+        }
+      ],
+      "returns": "Tuple of views.",
+      "example": "q, k, v = self.qkv(x).chunk(3, dim=-1)",
+      "see_also": [
+        "torch.split"
+      ],
+      "tags": [
+        "shapes",
+        "attention"
+      ]
+    },
+    {
+      "name": "torch.Tensor.clone",
+      "aliases": [
+        "x.clone",
+        ".clone",
+        "tensor.clone",
+        "clone"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Copy of the tensor that stays in the autograd graph.",
+      "signature": "Tensor.clone()",
+      "returns": "A new Tensor with its own memory.",
+      "example": "best_state = {k: v.cpu().clone() for k, v in model.state_dict().items()}",
+      "notes": [
+        "Use detach().clone() for a graph-free copy."
+      ],
+      "see_also": [
+        "torch.Tensor.detach"
+      ],
+      "tags": [
+        "memory"
+      ]
+    },
+    {
+      "name": "torch.Tensor.contiguous",
+      "aliases": [
+        "x.contiguous",
+        ".contiguous",
+        "tensor.contiguous",
+        "contiguous"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Returns a tensor with standard row-major memory layout (copies only if needed).",
+      "signature": "Tensor.contiguous()",
+      "returns": "A contiguous Tensor.",
+      "example": "x.transpose(1, 2).contiguous().view(N, -1)",
+      "see_also": [
+        "torch.Tensor.view",
+        "torch.Tensor.reshape"
+      ],
+      "tags": [
+        "memory"
+      ]
+    },
+    {
+      "name": "torch.Tensor.copy_",
+      "aliases": [
+        "x.copy_",
+        ".copy_",
+        "tensor.copy_",
+        "copy_"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "In-place copy of another tensor's values (broadcasting allowed).",
+      "signature": "Tensor.copy_(src)",
+      "parameters": [
+        {
+          "name": "src",
+          "type": "Tensor",
+          "description": "Source values."
+        }
+      ],
+      "returns": "self.",
+      "example": "with torch.no_grad():\n    layer.weight.copy_(other.weight)",
+      "tags": [
+        "inplace"
+      ]
+    },
+    {
+      "name": "torch.Tensor.cpu",
+      "aliases": [
+        "x.cpu",
+        ".cpu",
+        "tensor.cpu",
+        "cpu"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Moves a tensor to CPU memory.",
+      "signature": "Tensor.cpu()",
+      "returns": "A CPU Tensor.",
+      "example": "pred.cpu().numpy()",
+      "see_also": [
+        "torch.Tensor.to"
+      ],
+      "tags": [
+        "device"
+      ]
+    },
+    {
+      "name": "torch.Tensor.data_ptr",
+      "aliases": [
+        "x.data_ptr",
+        ".data_ptr",
+        "tensor.data_ptr",
+        "data_ptr"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Address of the first element in memory - equal pointers mean shared storage (e.g. tied embeddings).",
+      "signature": "Tensor.data_ptr()",
+      "returns": "int.",
+      "example": "lm_head.weight.data_ptr() == embed.weight.data_ptr()",
+      "tags": [
+        "memory"
+      ]
+    },
+    {
+      "name": "torch.Tensor.detach",
+      "aliases": [
+        "x.detach",
+        ".detach",
+        "tensor.detach",
+        "detach"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Returns a tensor sharing the data but cut from the autograd graph.",
+      "signature": "Tensor.detach()",
+      "returns": "A Tensor with requires_grad=False.",
+      "example": "self.last_attention = attention.detach()",
+      "notes": [
+        "Shares memory with the original."
+      ],
+      "see_also": [
+        "torch.no_grad"
+      ],
+      "tags": [
+        "autograd"
+      ]
+    },
+    {
+      "name": "torch.Tensor.diag",
+      "aliases": [
+        "x.diag",
+        ".diag",
+        "tensor.diag",
+        "diag"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Diagonal of a 2-D tensor (or a diagonal matrix from a 1-D tensor).",
+      "signature": "Tensor.diag(diagonal=0)",
+      "returns": "1-D Tensor for 2-D input.",
+      "example": "tp = confusion.diag()",
+      "tags": [
+        "metrics"
+      ]
+    },
+    {
+      "name": "torch.Tensor.double",
+      "aliases": [
+        "x.double",
+        ".double",
+        "tensor.double",
+        "double"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Casts to float64 (also on modules: model.double()).",
+      "signature": "Tensor.double()",
+      "returns": "A float64 Tensor.",
+      "example": "x = torch.randn(2, 3).double()",
+      "see_also": [
+        "torch.Tensor.to"
+      ],
+      "tags": [
+        "dtype"
+      ]
+    },
+    {
+      "name": "torch.Tensor.expand",
+      "aliases": [
+        "x.expand",
+        ".expand",
+        "tensor.expand",
+        "expand"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Broadcasts size-1 dimensions to a larger size without copying (-1 keeps a dimension).",
+      "signature": "Tensor.expand(*sizes)",
+      "returns": "A view.",
+      "example": "cls = self.cls_token.expand(len(tokens), -1, -1)",
+      "notes": [
+        "Result shares memory - don't write into it in place."
+      ],
+      "see_also": [
+        "torch.Tensor.repeat"
+      ],
+      "tags": [
+        "shapes",
+        "broadcasting"
+      ]
+    },
+    {
+      "name": "torch.Tensor.flip",
+      "aliases": [
+        "x.flip",
+        ".flip",
+        "tensor.flip",
+        "flip"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Reverses the order of elements along the given dimensions.",
+      "signature": "Tensor.flip(dims)",
+      "parameters": [
+        {
+          "name": "dims",
+          "type": "int | tuple",
+          "description": "Dimensions to flip."
+        }
+      ],
+      "returns": "A new Tensor.",
+      "example": "img.flip(-1)  # horizontal flip",
+      "tags": [
+        "shapes"
+      ]
+    },
+    {
+      "name": "torch.Tensor.float",
+      "aliases": [
+        "x.float",
+        ".float",
+        "tensor.float",
+        "float"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Casts to float32.",
+      "signature": "Tensor.float()",
+      "returns": "A float32 Tensor (self if already float32).",
+      "example": "(logits > 0).float()",
+      "see_also": [
+        "torch.Tensor.to"
+      ],
+      "tags": [
+        "dtype"
+      ]
+    },
+    {
+      "name": "torch.Tensor.int",
+      "aliases": [
+        "x.int",
+        ".int",
+        "tensor.int",
+        "int"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Casts to int32.",
+      "signature": "Tensor.int()",
+      "returns": "Tensor.",
+      "example": "inside.int().flatten().tolist()",
+      "see_also": [
+        "torch.Tensor.long"
+      ],
+      "tags": [
+        "dtype"
+      ]
+    },
+    {
+      "name": "torch.Tensor.item",
+      "aliases": [
+        "x.item",
+        ".item",
+        "tensor.item",
+        "item"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Python number from a one-element tensor.",
+      "signature": "Tensor.item()",
+      "returns": "int | float | bool.",
+      "example": "total_loss += loss.item() * batch_size",
+      "notes": [
+        "Forces a GPU sync and detaches from the graph - don't accumulate tensors in logs."
+      ],
+      "see_also": [
+        "torch.Tensor.tolist"
+      ],
+      "tags": [
+        "logging"
+      ]
+    },
+    {
+      "name": "torch.Tensor.long",
+      "aliases": [
+        "x.long",
+        ".long",
+        "tensor.long",
+        "long"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Casts to int64.",
+      "signature": "Tensor.long()",
+      "returns": "An int64 Tensor.",
+      "example": "i0 = torch.floor(src).long()",
+      "notes": [
+        "Index tensors must be int64 (or bool)."
+      ],
+      "see_also": [
+        "torch.Tensor.to"
+      ],
+      "tags": [
+        "dtype",
+        "indexing"
+      ]
+    },
+    {
+      "name": "torch.Tensor.masked_fill",
+      "aliases": [
+        "x.masked_fill",
+        ".masked_fill",
+        "tensor.masked_fill",
+        "masked_fill"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Returns a copy where positions with mask == True are replaced by a value.",
+      "signature": "Tensor.masked_fill(mask, value)",
+      "parameters": [
+        {
+          "name": "mask",
+          "type": "BoolTensor",
+          "description": "Broadcastable to the tensor."
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "description": "Fill value, e.g. float('-inf')."
+        }
+      ],
+      "returns": "A new Tensor (masked_fill_ is the in-place version).",
+      "example": "scores = scores.masked_fill(~mask[:, None, None, :], float('-inf'))",
+      "notes": [
+        "Fills where the mask is True - invert with ~ if your mask marks the entries to KEEP.",
+        "-inf before softmax gives exactly zero weight."
+      ],
+      "see_also": [
+        "torch.where"
+      ],
+      "tags": [
+        "masking",
+        "attention"
+      ]
+    },
+    {
+      "name": "torch.Tensor.max",
+      "aliases": [
+        "torch.max",
+        "max"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Maximum value; with dim returns (values, indices).",
+      "signature": "Tensor.max(dim=None, keepdim=False)",
+      "returns": "Tensor, or namedtuple (values, indices) when dim is given.",
+      "example": "vals = x.max(dim=1).values",
+      "notes": [
+        "max reduces ONE dim; use amax for several dims."
+      ],
+      "see_also": [
+        "torch.amax"
+      ],
+      "tags": [
+        "reduction"
+      ]
+    },
+    {
+      "name": "torch.Tensor.mean",
+      "aliases": [
+        "torch.mean",
+        "mean"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Mean over all elements or over the given dimensions.",
+      "signature": "Tensor.mean(dim=None, keepdim=False)",
+      "parameters": [
+        {
+          "name": "dim",
+          "type": "int | tuple",
+          "default": "None",
+          "description": "Dimension(s) to reduce."
+        },
+        {
+          "name": "keepdim",
+          "type": "bool",
+          "default": "False",
+          "description": "Keep reduced dims as size 1."
+        }
+      ],
+      "returns": "Tensor.",
+      "example": "per_channel = x.mean(dim=(0, 2, 3))  # (C,)",
+      "notes": [
+        "Empty selections give NaN."
+      ],
+      "see_also": [
+        "torch.Tensor.sum",
+        "torch.Tensor.std"
+      ],
+      "tags": [
+        "reduction"
+      ]
+    },
+    {
+      "name": "torch.Tensor.min",
+      "aliases": [
+        "torch.min",
+        "min"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Minimum value; with dim returns (values, indices).",
+      "signature": "Tensor.min(dim=None, keepdim=False)",
+      "returns": "Tensor or (values, indices).",
+      "example": "x.min()",
+      "see_also": [
+        "torch.Tensor.max"
+      ],
+      "tags": [
+        "reduction"
+      ]
+    },
+    {
+      "name": "torch.Tensor.nanmean",
+      "aliases": [
+        "torch.nanmean",
+        "nanmean"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Mean that ignores NaN entries.",
+      "signature": "Tensor.nanmean(dim=None)",
+      "returns": "Tensor.",
+      "example": "miou = float(iou.nanmean())",
+      "notes": [
+        "Used to skip classes that have no pixels (their IoU is NaN)."
+      ],
+      "see_also": [
+        "torch.Tensor.mean"
+      ],
+      "tags": [
+        "reduction",
+        "metrics"
+      ]
+    },
+    {
+      "name": "torch.Tensor.new_empty",
+      "aliases": [
+        "x.new_empty",
+        ".new_empty",
+        "tensor.new_empty",
+        "new_empty"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Uninitialised tensor with the same dtype and device as this tensor.",
+      "signature": "Tensor.new_empty(size)",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "tuple",
+          "description": "Shape."
+        }
+      ],
+      "returns": "A new Tensor with arbitrary contents.",
+      "example": "out = x.new_empty((N, C, H_out, W_out))",
+      "notes": [
+        "Contents are garbage until written."
+      ],
+      "see_also": [
+        "torch.Tensor.new_zeros"
+      ],
+      "tags": [
+        "creation"
+      ]
+    },
+    {
+      "name": "torch.Tensor.new_zeros",
+      "aliases": [
+        "x.new_zeros",
+        ".new_zeros",
+        "tensor.new_zeros",
+        "new_zeros"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Zero tensor with the same dtype and device as this tensor.",
+      "signature": "Tensor.new_zeros(size)",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "tuple",
+          "description": "Shape."
+        }
+      ],
+      "returns": "A new Tensor.",
+      "example": "out = x.new_zeros((N, C, H + 2, W + 2))",
+      "notes": [
+        "new_empty is the uninitialised version - only use it if every element will be overwritten."
+      ],
+      "see_also": [
+        "torch.zeros",
+        "torch.Tensor.new_empty"
+      ],
+      "tags": [
+        "creation"
+      ]
+    },
+    {
+      "name": "torch.Tensor.numel",
+      "aliases": [
+        "x.numel",
+        ".numel",
+        "tensor.numel",
+        "numel"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Total number of elements.",
+      "signature": "Tensor.numel()",
+      "returns": "int.",
+      "example": "n_pixels = images.numel() / 3",
+      "tags": [
+        "shapes"
+      ]
+    },
+    {
+      "name": "torch.Tensor.numpy",
+      "aliases": [
+        "x.numpy",
+        ".numpy",
+        "tensor.numpy",
+        "numpy"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Returns a NumPy array sharing memory with a CPU tensor.",
+      "signature": "Tensor.numpy()",
+      "returns": "numpy.ndarray.",
+      "example": "arr = t.detach().cpu().numpy()",
+      "notes": [
+        "Needs a CPU tensor without grad: detach().cpu() first."
+      ],
+      "see_also": [
+        "torch.from_numpy"
+      ],
+      "tags": [
+        "numpy"
+      ]
+    },
+    {
+      "name": "torch.Tensor.permute",
+      "aliases": [
+        "x.permute",
+        ".permute",
+        "tensor.permute",
+        "permute"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Reorders all dimensions.",
+      "signature": "Tensor.permute(*dims)",
+      "parameters": [
+        {
+          "name": "dims",
+          "type": "int...",
+          "description": "New order of ALL dimensions."
+        }
+      ],
+      "returns": "A view with permuted strides (usually non-contiguous).",
+      "example": "x.permute(0, 2, 3, 1)  # NCHW -> NHWC",
+      "notes": [
+        "The result is non-contiguous: use reshape (or .contiguous().view)."
+      ],
+      "see_also": [
+        "torch.Tensor.transpose",
+        "torch.Tensor.contiguous"
+      ],
+      "tags": [
+        "shapes"
+      ]
+    },
+    {
+      "name": "torch.Tensor.pow",
+      "aliases": [
+        "torch.pow",
+        "pow"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Element-wise power (x ** p).",
+      "signature": "Tensor.pow(exponent)",
+      "returns": "Tensor.",
+      "example": "x.pow(2).mean(dim=-1, keepdim=True)",
+      "see_also": [
+        "torch.square"
+      ],
+      "tags": [
+        "math"
+      ]
+    },
+    {
+      "name": "torch.Tensor.repeat",
+      "aliases": [
+        "x.repeat",
+        ".repeat",
+        "tensor.repeat",
+        "repeat"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Repeats the tensor along each dimension (copies data).",
+      "signature": "Tensor.repeat(*sizes)",
+      "returns": "Tensor.",
+      "example": "torch.arange(8.).reshape(1, 1, 2, 4).repeat(2, 3, 1, 1)",
+      "notes": [
+        "expand does the same without copying (size-1 dims only)."
+      ],
+      "see_also": [
+        "torch.Tensor.expand"
+      ],
+      "tags": [
+        "shapes"
+      ]
+    },
+    {
+      "name": "torch.Tensor.reshape",
+      "aliases": [
+        "x.reshape",
+        ".reshape",
+        "tensor.reshape",
+        "reshape"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Returns a tensor with the same data and a new shape; a view if possible, otherwise a copy.",
+      "signature": "Tensor.reshape(*shape)",
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "int...",
+          "description": "New shape; one dimension may be -1 (inferred)."
+        }
+      ],
+      "returns": "Tensor with the requested shape.",
+      "example": "x.reshape(x.shape[0], -1)  # (B, C*H*W)",
+      "notes": [
+        "Works on non-contiguous tensors (view would raise)."
+      ],
+      "see_also": [
+        "torch.Tensor.view",
+        "torch.flatten"
+      ],
+      "tags": [
+        "shapes"
+      ]
+    },
+    {
+      "name": "torch.Tensor.round",
+      "aliases": [
+        "torch.round",
+        "round"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Rounds to the nearest integer (or to `decimals` digits).",
+      "signature": "Tensor.round(decimals=0)",
+      "returns": "Tensor.",
+      "example": "img.round().clamp(0, 255).to(torch.uint8)",
+      "tags": [
+        "math"
+      ]
+    },
+    {
+      "name": "torch.Tensor.shape",
+      "aliases": [
+        "x.shape",
+        "shape",
+        "Tensor.size",
+        "x.size"
+      ],
+      "kind": "attribute",
+      "module": "torch.Tensor",
+      "summary": "Tuple-like torch.Size with the size of every dimension (x.size() is the method form; x.size(0) / x.shape[0] gives one dimension).",
+      "returns": "torch.Size.",
+      "example": "N, C, H, W = x.shape",
+      "notes": [
+        "Unpack shapes at the top of a function and re-use the names in reshape calls."
+      ],
+      "see_also": [
+        "torch.Tensor.reshape"
+      ],
+      "tags": [
+        "shapes"
+      ]
+    },
+    {
+      "name": "torch.Tensor.squeeze",
+      "aliases": [
+        "x.squeeze",
+        ".squeeze",
+        "tensor.squeeze",
+        "squeeze"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Removes size-1 dimensions (all of them, or the given one).",
+      "signature": "Tensor.squeeze(dim=None)",
+      "parameters": [
+        {
+          "name": "dim",
+          "type": "int",
+          "default": "None",
+          "description": "Only squeeze this dim if its size is 1."
+        }
+      ],
+      "returns": "A view.",
+      "example": "logits = self.head(x).squeeze(-1)  # (N, 1) -> (N,)",
+      "notes": [
+        "Without dim it also removes a batch axis of size 1 - prefer squeeze(-1)."
+      ],
+      "see_also": [
+        "torch.Tensor.unsqueeze"
+      ],
+      "tags": [
+        "shapes"
+      ]
+    },
+    {
+      "name": "torch.Tensor.std",
+      "aliases": [
+        "torch.std",
+        "std"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Standard deviation; unbiased (N-1) by default.",
+      "signature": "Tensor.std(dim=None, unbiased=True, keepdim=False)",
+      "parameters": [
+        {
+          "name": "unbiased",
+          "type": "bool",
+          "default": "True",
+          "description": "False divides by N (population std). Newer API: correction=0."
+        },
+        {
+          "name": "dim",
+          "type": "int | tuple",
+          "default": "None",
+          "description": "Dimension(s) to reduce."
+        }
+      ],
+      "returns": "Tensor.",
+      "example": "x.std(dim=(0, 2, 3), unbiased=False)",
+      "notes": [
+        "Normalisation statistics usually use the population std (unbiased=False)."
+      ],
+      "see_also": [
+        "torch.Tensor.mean"
+      ],
+      "tags": [
+        "reduction",
+        "statistics"
+      ]
+    },
+    {
+      "name": "torch.Tensor.sum",
+      "aliases": [
+        "torch.sum",
+        "sum"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Sum over all elements or over the given dimensions.",
+      "signature": "Tensor.sum(dim=None, keepdim=False)",
+      "parameters": [
+        {
+          "name": "dim",
+          "type": "int | tuple",
+          "default": "None",
+          "description": "Dimension(s) to reduce - they disappear from the shape."
+        },
+        {
+          "name": "keepdim",
+          "type": "bool",
+          "default": "False",
+          "description": "Keep reduced dims as size 1 so the result broadcasts against the input."
+        }
+      ],
+      "returns": "Tensor.",
+      "example": "x.sum(dim=(0, 2, 3), keepdim=True)  # (N, C, H, W) -> (1, C, 1, 1)",
+      "notes": [
+        "The dims you pass are the ones that get collapsed."
+      ],
+      "see_also": [
+        "torch.Tensor.mean"
+      ],
+      "tags": [
+        "reduction"
+      ]
+    },
+    {
+      "name": "torch.Tensor.to",
+      "aliases": [
+        "x.to",
+        ".to",
+        "tensor.to",
+        "to"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Converts dtype and/or moves to a device. Returns self if nothing changes.",
+      "signature": "Tensor.to(dtype=None, device=None, non_blocking=False)",
+      "parameters": [
+        {
+          "name": "dtype",
+          "type": "torch.dtype",
+          "description": "Target dtype."
+        },
+        {
+          "name": "device",
+          "type": "torch.device | str",
+          "description": "Target device."
+        },
+        {
+          "name": "non_blocking",
+          "type": "bool",
+          "default": "False",
+          "description": "Asynchronous copy (useful with pinned memory)."
+        }
+      ],
+      "returns": "A Tensor (possibly the same object).",
+      "example": "images = images.to(device, non_blocking=True)\nx32 = x.to(torch.float32)",
+      "notes": [
+        "No copy is made when dtype/device already match - the result may alias the input.",
+        "Move the labels too, not just the inputs."
+      ],
+      "see_also": [
+        "torch.Tensor.float",
+        "torch.Tensor.cpu"
+      ],
+      "tags": [
+        "device",
+        "dtype"
+      ]
+    },
+    {
+      "name": "torch.Tensor.tolist",
+      "aliases": [
+        "x.tolist",
+        ".tolist",
+        "tensor.tolist",
+        "tolist"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Converts a tensor to (nested) Python lists.",
+      "signature": "Tensor.tolist()",
+      "returns": "list.",
+      "example": "train_indices = perm[:4500].tolist()",
+      "see_also": [
+        "torch.Tensor.item"
+      ],
+      "tags": [
+        "conversion"
+      ]
+    },
+    {
+      "name": "torch.Tensor.transpose",
+      "aliases": [
+        "x.transpose",
+        ".transpose",
+        "tensor.transpose",
+        "transpose"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Swaps two dimensions.",
+      "signature": "Tensor.transpose(dim0, dim1)",
+      "parameters": [
+        {
+          "name": "dim0",
+          "type": "int",
+          "description": "First dim."
+        },
+        {
+          "name": "dim1",
+          "type": "int",
+          "description": "Second dim."
+        }
+      ],
+      "returns": "A view with those dims swapped.",
+      "example": "scores = q @ k.transpose(-2, -1)",
+      "notes": [
+        "Non-contiguous result: follow with reshape rather than view."
+      ],
+      "see_also": [
+        "torch.Tensor.permute"
+      ],
+      "tags": [
+        "shapes",
+        "attention"
+      ]
+    },
+    {
+      "name": "torch.Tensor.unsqueeze",
+      "aliases": [
+        "x.unsqueeze",
+        ".unsqueeze",
+        "tensor.unsqueeze",
+        "unsqueeze"
+      ],
+      "kind": "method",
+      "module": "torch.Tensor",
+      "summary": "Inserts a size-1 dimension at the given position.",
+      "signature": "Tensor.unsqueeze(dim)",
+      "parameters": [
+        {
+          "name": "dim",
+          "type": "int",
+          "description": "Position of the new axis."
+        }
+      ],
+      "returns": "A view.",
+      "example": "col = v.unsqueeze(1)  # (n,) -> (n, 1)",
+      "notes": [
+        "x[:, None] is equivalent."
+      ],
+      "see_also": [
+        "torch.Tensor.squeeze"
+      ],
+      "tags": [
+        "shapes",
+        "broadcasting"
+      ]
     },
     {
       "name": "torch.Tensor.view",
-      "aliases": ["view", "x.view", "reshape", "Tensor.reshape"],
+      "aliases": [
+        "view",
+        "x.view",
+        "reshape",
+        "Tensor.reshape"
+      ],
       "kind": "method",
       "module": "torch",
       "signature": "Tensor.view(*shape)",
       "summary": "Returns a tensor with the same data and a new shape. One dimension may be -1 (inferred).",
       "example": "x.view(x.size(0), -1)",
-      "notes": ["Requires contiguous memory; use reshape() if unsure."],
-      "tags": ["shape"]
+      "notes": [
+        "Requires contiguous memory; use reshape() if unsure."
+      ],
+      "tags": [
+        "shape"
+      ]
+    },
+    {
+      "name": "torch.allclose",
+      "aliases": [
+        "allclose"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "True if all elements are close within rtol/atol.",
+      "signature": "torch.allclose(a, b, rtol=1e-5, atol=1e-8)",
+      "returns": "bool.",
+      "example": "assert torch.allclose(lhs, rhs)",
+      "see_also": [
+        "torch.equal",
+        "torch.testing.assert_close"
+      ],
+      "tags": [
+        "testing"
+      ]
+    },
+    {
+      "name": "torch.amax",
+      "aliases": [
+        "Tensor.amax",
+        "x.amax",
+        ".amax",
+        "amax"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Maximum over one or several dimensions, values only (no indices).",
+      "signature": "torch.amax(input, dim, keepdim=False)",
+      "parameters": [
+        {
+          "name": "dim",
+          "type": "int | tuple",
+          "description": "Dimension(s) to reduce."
+        }
+      ],
+      "returns": "Tensor.",
+      "example": "x.amax(dim=(-2, -1))  # max-pool a window\nlogits - logits.amax(dim=-1, keepdim=True)  # stable softmax shift",
+      "notes": [
+        "Faster than max(dim) when you don't need the indices; evenly distributes gradient among ties."
+      ],
+      "see_also": [
+        "torch.Tensor.max"
+      ],
+      "tags": [
+        "reduction"
+      ]
+    },
+    {
+      "name": "torch.arange",
+      "aliases": [
+        "arange"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "1-D tensor of evenly spaced values in [start, end) with the given step.",
+      "signature": "torch.arange(start=0, end, step=1, *, dtype=None, device=None)",
+      "parameters": [
+        {
+          "name": "start",
+          "type": "number",
+          "default": "0",
+          "description": "First value."
+        },
+        {
+          "name": "end",
+          "type": "number",
+          "description": "Exclusive upper bound."
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "default": "1",
+          "description": "Gap between values."
+        },
+        {
+          "name": "dtype",
+          "type": "torch.dtype",
+          "default": "None",
+          "description": "int64 if all arguments are integers, otherwise the default float dtype."
+        }
+      ],
+      "returns": "1-D Tensor of length ceil((end - start) / step).",
+      "example": "torch.arange(4)                        # tensor([0, 1, 2, 3])\ntorch.arange(0, 1, 0.25)               # tensor([0.00, 0.25, 0.50, 0.75])\ntorch.arange(6, dtype=torch.float32).reshape(2, 3)",
+      "notes": [
+        "Integer arguments give an int64 tensor - pass dtype=... if you need floats.",
+        "Pass device=x.device when building index tensors for GPU data."
+      ],
+      "see_also": [
+        "torch.linspace"
+      ],
+      "tags": [
+        "creation",
+        "indexing"
+      ]
+    },
+    {
+      "name": "torch.as_tensor",
+      "aliases": [
+        "as_tensor"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Converts data to a tensor, avoiding a copy when dtype/device already match (shares memory with ndarray inputs).",
+      "signature": "torch.as_tensor(data, dtype=None, device=None)",
+      "parameters": [
+        {
+          "name": "data",
+          "description": "List, ndarray or tensor."
+        },
+        {
+          "name": "dtype",
+          "type": "torch.dtype",
+          "default": "None",
+          "description": "Optional cast (copies if it changes the dtype)."
+        }
+      ],
+      "returns": "A Tensor, possibly sharing memory with data.",
+      "example": "t = torch.as_tensor([1.0, 2.0], dtype=torch.float32)",
+      "notes": [
+        "Not a safe way to get an independent copy: add .clone()."
+      ],
+      "see_also": [
+        "torch.tensor",
+        "torch.from_numpy"
+      ],
+      "tags": [
+        "creation"
+      ]
+    },
+    {
+      "name": "torch.backends.cudnn.benchmark",
+      "aliases": [
+        "benchmark"
+      ],
+      "kind": "attribute",
+      "module": "torch.backends.cudnn",
+      "summary": "If True, cuDNN auto-tunes convolution algorithms (faster for fixed shapes, non-deterministic).",
+      "example": "torch.backends.cudnn.benchmark = False",
+      "see_also": [
+        "torch.backends.cudnn.deterministic"
+      ],
+      "tags": [
+        "reproducibility"
+      ]
+    },
+    {
+      "name": "torch.backends.cudnn.deterministic",
+      "aliases": [
+        "deterministic"
+      ],
+      "kind": "attribute",
+      "module": "torch.backends.cudnn",
+      "summary": "If True, cuDNN only uses deterministic algorithms (reproducible but possibly slower).",
+      "example": "torch.backends.cudnn.deterministic = True",
+      "see_also": [
+        "torch.backends.cudnn.benchmark"
+      ],
+      "tags": [
+        "reproducibility"
+      ]
+    },
+    {
+      "name": "torch.bincount",
+      "aliases": [
+        "bincount"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Counts occurrences of each non-negative integer in a 1-D tensor.",
+      "signature": "torch.bincount(input, weights=None, minlength=0)",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "1-D LongTensor",
+          "description": "Non-negative integers."
+        },
+        {
+          "name": "minlength",
+          "type": "int",
+          "default": "0",
+          "description": "Minimum length of the output (use K*K for a confusion matrix)."
+        }
+      ],
+      "returns": "1-D LongTensor of counts.",
+      "example": "idx = target.reshape(-1) * K + pred.reshape(-1)\ncm = torch.bincount(idx, minlength=K * K).reshape(K, K)",
+      "tags": [
+        "metrics"
+      ]
+    },
+    {
+      "name": "torch.block_diag",
+      "aliases": [
+        "block_diag"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Builds a block-diagonal matrix from the given matrices.",
+      "signature": "torch.block_diag(*tensors)",
+      "returns": "2-D Tensor.",
+      "example": "M = torch.block_diag(*blocks)",
+      "tags": [
+        "linear-algebra"
+      ]
+    },
+    {
+      "name": "torch.bmm",
+      "aliases": [
+        "bmm"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Batched matrix product of two 3-D tensors (N, a, b) x (N, b, c).",
+      "signature": "torch.bmm(input, mat2)",
+      "returns": "(N, a, c) Tensor.",
+      "example": "scores = torch.bmm(q, k.transpose(1, 2))",
+      "see_also": [
+        "torch.matmul"
+      ],
+      "tags": [
+        "linear-algebra"
+      ]
+    },
+    {
+      "name": "torch.bool",
+      "aliases": [
+        "bool"
+      ],
+      "kind": "attribute",
+      "module": "torch",
+      "summary": "Boolean dtype, used for masks.",
+      "example": "mask = torch.ones(4, dtype=torch.bool)",
+      "notes": [
+        "Invert with ~mask."
+      ],
+      "see_also": [
+        "torch.Tensor.masked_fill"
+      ],
+      "tags": [
+        "dtype",
+        "masking"
+      ]
+    },
+    {
+      "name": "torch.cat",
+      "aliases": [
+        "torch.concat",
+        "cat",
+        "concat"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Concatenates tensors along an EXISTING dimension.",
+      "signature": "torch.cat(tensors, dim=0)",
+      "parameters": [
+        {
+          "name": "tensors",
+          "type": "sequence of Tensor",
+          "description": "Tensors with equal shapes except along dim."
+        },
+        {
+          "name": "dim",
+          "type": "int",
+          "default": "0",
+          "description": "Dimension to join, e.g. 1 for channels in NCHW."
+        }
+      ],
+      "returns": "A new Tensor.",
+      "example": "u = torch.cat([skip, up], dim=1)  # (N, C1+C2, H, W)",
+      "notes": [
+        "torch.concat is an alias.",
+        "Order matters when later layers expect a particular channel order."
+      ],
+      "see_also": [
+        "torch.stack"
+      ],
+      "tags": [
+        "shapes",
+        "unet"
+      ]
+    },
+    {
+      "name": "torch.cdist",
+      "aliases": [
+        "cdist"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Pairwise distances between row sets (p-norm).",
+      "signature": "torch.cdist(x1, x2, p=2.0)",
+      "returns": "(N, M) Tensor.",
+      "example": "d = torch.cdist(A, B)",
+      "notes": [
+        "Forbidden in the Project 1 exercise: implement the ||a||^2 - 2a.b + ||b||^2 expansion instead."
+      ],
+      "see_also": [
+        "torch.matmul"
+      ],
+      "tags": [
+        "distance"
+      ]
+    },
+    {
+      "name": "torch.clamp",
+      "aliases": [
+        "Tensor.clamp",
+        "x.clamp",
+        ".clamp",
+        "clamp"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Limits values to the range [min, max].",
+      "signature": "torch.clamp(input, min=None, max=None)",
+      "parameters": [
+        {
+          "name": "min",
+          "type": "number",
+          "default": "None",
+          "description": "Lower bound."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "default": "None",
+          "description": "Upper bound."
+        }
+      ],
+      "returns": "Tensor.",
+      "example": "d = result.clamp(min=0)",
+      "notes": [
+        "Pass at least one of min/max."
+      ],
+      "tags": [
+        "math"
+      ]
+    },
+    {
+      "name": "torch.cos",
+      "aliases": [
+        "cos"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Element-wise cosine (radians).",
+      "signature": "torch.cos(input)",
+      "returns": "Tensor of the same shape.",
+      "example": "torch.cos(angles)",
+      "tags": [
+        "math"
+      ]
+    },
+    {
+      "name": "torch.cuda.empty_cache",
+      "aliases": [
+        "empty_cache"
+      ],
+      "kind": "function",
+      "module": "torch.cuda",
+      "summary": "Releases unused cached GPU memory back to the driver.",
+      "signature": "torch.cuda.empty_cache()",
+      "example": "torch.cuda.empty_cache()",
+      "notes": [
+        "Doesn't free tensors that are still referenced."
+      ],
+      "tags": [
+        "device",
+        "memory"
+      ]
+    },
+    {
+      "name": "torch.cuda.get_device_name",
+      "aliases": [
+        "get_device_name"
+      ],
+      "kind": "function",
+      "module": "torch.cuda",
+      "summary": "Name of a GPU, e.g. 'NVIDIA GeForce RTX 2080 Ti'.",
+      "signature": "torch.cuda.get_device_name(device=None)",
+      "returns": "str.",
+      "example": "print(torch.cuda.get_device_name(0))",
+      "see_also": [
+        "torch.cuda.is_available"
+      ],
+      "tags": [
+        "device"
+      ]
+    },
+    {
+      "name": "torch.cuda.is_available",
+      "aliases": [
+        "is_available"
+      ],
+      "kind": "function",
+      "module": "torch.cuda",
+      "summary": "True if a CUDA GPU can be used.",
+      "signature": "torch.cuda.is_available()",
+      "returns": "bool.",
+      "example": "device = 'cuda' if torch.cuda.is_available() else 'cpu'",
+      "see_also": [
+        "torch.device"
+      ],
+      "tags": [
+        "device"
+      ]
+    },
+    {
+      "name": "torch.cuda.manual_seed_all",
+      "aliases": [
+        "manual_seed_all"
+      ],
+      "kind": "function",
+      "module": "torch.cuda",
+      "summary": "Seeds the random number generators of all GPUs.",
+      "signature": "torch.cuda.manual_seed_all(seed)",
+      "parameters": [
+        {
+          "name": "seed",
+          "type": "int",
+          "description": "Seed value."
+        }
+      ],
+      "example": "torch.cuda.manual_seed_all(42)",
+      "see_also": [
+        "torch.manual_seed"
+      ],
+      "tags": [
+        "random",
+        "reproducibility"
+      ]
+    },
+    {
+      "name": "torch.cuda.synchronize",
+      "aliases": [
+        "synchronize"
+      ],
+      "kind": "function",
+      "module": "torch.cuda",
+      "summary": "Waits for all queued GPU kernels to finish - needed for accurate timings.",
+      "signature": "torch.cuda.synchronize()",
+      "example": "torch.cuda.synchronize()\nt0 = time.perf_counter()",
+      "tags": [
+        "device",
+        "timing"
+      ]
+    },
+    {
+      "name": "torch.device",
+      "aliases": [
+        "device"
+      ],
+      "kind": "class",
+      "module": "torch",
+      "summary": "Describes where tensors live ('cpu', 'cuda', 'cuda:1').",
+      "signature": "torch.device(type)",
+      "parameters": [
+        {
+          "name": "type",
+          "type": "str",
+          "description": "Device string."
+        }
+      ],
+      "returns": "A torch.device.",
+      "example": "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')",
+      "see_also": [
+        "torch.cuda.is_available"
+      ],
+      "tags": [
+        "device"
+      ]
+    },
+    {
+      "name": "torch.einsum",
+      "aliases": [
+        "einsum"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Einstein-summation: multiply and sum tensors according to an index equation.",
+      "signature": "torch.einsum(equation, *operands)",
+      "parameters": [
+        {
+          "name": "equation",
+          "type": "str",
+          "description": "e.g. 'nc,cokh->nokh'; indices missing from the output are summed."
+        }
+      ],
+      "returns": "Tensor.",
+      "example": "stamp = torch.einsum('nc,cokh->nokh', x[:, :, i, j], weight)",
+      "notes": [
+        "Index appears on the left but not on the right -> multiply and sum over it."
+      ],
+      "see_also": [
+        "torch.matmul",
+        "torch.tensordot"
+      ],
+      "tags": [
+        "linear-algebra"
+      ]
+    },
+    {
+      "name": "torch.equal",
+      "aliases": [
+        "equal"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "True if two tensors have the same shape and exactly equal elements.",
+      "signature": "torch.equal(a, b)",
+      "returns": "bool.",
+      "example": "assert torch.equal(block(x), x)",
+      "notes": [
+        "Exact comparison; use torch.allclose for floats."
+      ],
+      "see_also": [
+        "torch.allclose"
+      ],
+      "tags": [
+        "testing"
+      ]
+    },
+    {
+      "name": "torch.exp",
+      "aliases": [
+        "exp"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Element-wise e^x.",
+      "signature": "torch.exp(input)",
+      "returns": "Tensor of the same shape.",
+      "example": "torch.exp(z - z.max())",
+      "tags": [
+        "math"
+      ]
+    },
+    {
+      "name": "torch.eye",
+      "aliases": [
+        "eye"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "2-D identity matrix.",
+      "signature": "torch.eye(n, m=None, *, dtype=None)",
+      "parameters": [
+        {
+          "name": "n",
+          "type": "int",
+          "description": "Rows (and columns if m is None)."
+        }
+      ],
+      "returns": "(n, m) Tensor with ones on the diagonal.",
+      "example": "torch.eye(3)[1]  # one-hot row for class 1",
+      "tags": [
+        "creation"
+      ]
+    },
+    {
+      "name": "torch.flatten",
+      "aliases": [
+        "flatten",
+        "Tensor.flatten",
+        "x.flatten"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "signature": "torch.flatten(input, start_dim=0, end_dim=-1)",
+      "summary": "Flattens dimensions start_dim..end_dim into one. Use start_dim=1 to keep the batch dimension.",
+      "parameters": [
+        {
+          "name": "start_dim",
+          "type": "int",
+          "default": "0",
+          "description": "First dim to flatten."
+        },
+        {
+          "name": "end_dim",
+          "type": "int",
+          "default": "-1",
+          "description": "Last dim to flatten."
+        }
+      ],
+      "example": "x = torch.randn(8, 1, 28, 28)\nx.flatten(1).shape  # torch.Size([8, 784])",
+      "tags": [
+        "shape"
+      ]
+    },
+    {
+      "name": "torch.float32",
+      "aliases": [
+        "torch.float",
+        "float32"
+      ],
+      "kind": "attribute",
+      "module": "torch",
+      "summary": "32-bit floating point dtype (the default float dtype).",
+      "example": "x = torch.zeros(2, dtype=torch.float32)",
+      "notes": [
+        "torch.float is an alias."
+      ],
+      "see_also": [
+        "torch.float64"
+      ],
+      "tags": [
+        "dtype"
+      ]
+    },
+    {
+      "name": "torch.float64",
+      "aliases": [
+        "torch.double",
+        "float64"
+      ],
+      "kind": "attribute",
+      "module": "torch",
+      "summary": "64-bit floating point dtype; use it to compare an implementation against PyTorch with tight tolerances.",
+      "example": "x = torch.randn(3, dtype=torch.float64)",
+      "notes": [
+        "torch.double is an alias."
+      ],
+      "see_also": [
+        "torch.float32"
+      ],
+      "tags": [
+        "dtype"
+      ]
+    },
+    {
+      "name": "torch.floor",
+      "aliases": [
+        "floor"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Element-wise floor.",
+      "signature": "torch.floor(input)",
+      "returns": "Tensor of the same shape.",
+      "example": "torch.floor(src).long()",
+      "tags": [
+        "math"
+      ]
+    },
+    {
+      "name": "torch.from_numpy",
+      "aliases": [
+        "from_numpy"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Creates a tensor that SHARES memory with a NumPy array (no copy). dtype and shape come from the array.",
+      "signature": "torch.from_numpy(ndarray)",
+      "parameters": [
+        {
+          "name": "ndarray",
+          "type": "numpy.ndarray",
+          "description": "Source array (must have a supported dtype)."
+        }
+      ],
+      "returns": "A Tensor viewing the array's buffer.",
+      "example": "a = np.zeros(3)\nt = torch.from_numpy(a)\nt += 1\nprint(a)  # [1. 1. 1.]",
+      "notes": [
+        "Mutating either object changes the other.",
+        "Keeps the array's dtype (float64 stays float64); chain .to(torch.float32) AND .clone() if you need an independent float32 copy."
+      ],
+      "see_also": [
+        "torch.tensor",
+        "torch.as_tensor"
+      ],
+      "tags": [
+        "creation",
+        "numpy"
+      ]
+    },
+    {
+      "name": "torch.full",
+      "aliases": [
+        "full"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Tensor of the given shape filled with one value.",
+      "signature": "torch.full(size, fill_value, *, dtype=None, device=None)",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "tuple",
+          "description": "Shape."
+        },
+        {
+          "name": "fill_value",
+          "type": "number",
+          "description": "Value (dtype is inferred from it unless given)."
+        }
+      ],
+      "returns": "A new Tensor.",
+      "example": "torch.full((2, 3), 7.0)",
+      "see_also": [
+        "torch.zeros"
+      ],
+      "tags": [
+        "creation"
+      ]
+    },
+    {
+      "name": "torch.full_like",
+      "aliases": [
+        "full_like"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Tensor filled with a value, with the shape/dtype/device of the input.",
+      "signature": "torch.full_like(input, fill_value)",
+      "returns": "Tensor.",
+      "example": "nan = torch.full_like(tp, float(\"nan\"))",
+      "see_also": [
+        "torch.full"
+      ],
+      "tags": [
+        "creation"
+      ]
+    },
+    {
+      "name": "torch.gather",
+      "aliases": [
+        "Tensor.gather",
+        "x.gather",
+        ".gather",
+        "gather"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Picks values along one dimension using an index tensor of the same number of dimensions; output has the shape of index.",
+      "signature": "torch.gather(input, dim, index)",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "Tensor",
+          "description": "Source tensor."
+        },
+        {
+          "name": "dim",
+          "type": "int",
+          "description": "Axis along which to pick."
+        },
+        {
+          "name": "index",
+          "type": "LongTensor",
+          "description": "Same number of dims as input; values index into input along dim."
+        }
+      ],
+      "returns": "Tensor with the shape of index.",
+      "example": "log_probs = torch.log_softmax(logits, dim=1)      # (N, K)\npicked = torch.gather(log_probs, 1, labels.unsqueeze(1))  # (N, 1)",
+      "notes": [
+        "For dim=1: out[i][j] = input[i][index[i][j]].",
+        "Add a singleton axis to the labels (unsqueeze) so index has the same rank as input; squeeze afterwards if needed."
+      ],
+      "see_also": [
+        "torch.Tensor.unsqueeze"
+      ],
+      "tags": [
+        "indexing",
+        "loss"
+      ]
+    },
+    {
+      "name": "torch.get_num_threads",
+      "aliases": [
+        "get_num_threads"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Current number of CPU threads used for intra-op parallelism.",
+      "signature": "torch.get_num_threads()",
+      "returns": "int.",
+      "example": "torch.set_num_threads(min(4, torch.get_num_threads()))",
+      "see_also": [
+        "torch.set_num_threads"
+      ],
+      "tags": [
+        "cpu"
+      ]
+    },
+    {
+      "name": "torch.hub.load_state_dict_from_url",
+      "aliases": [
+        "load_state_dict_from_url"
+      ],
+      "kind": "function",
+      "module": "torch.hub",
+      "summary": "Downloads (and caches) a checkpoint file from a URL and loads it.",
+      "signature": "torch.hub.load_state_dict_from_url(url, map_location=None)",
+      "returns": "The loaded state dict.",
+      "example": "sd = torch.hub.load_state_dict_from_url(url, map_location='cpu')",
+      "see_also": [
+        "torch.nn.Module.load_state_dict"
+      ],
+      "tags": [
+        "checkpoint"
+      ]
+    },
+    {
+      "name": "torch.inference_mode",
+      "aliases": [
+        "inference_mode"
+      ],
+      "kind": "context_manager",
+      "module": "torch",
+      "summary": "Like no_grad but stricter and faster: tensors created inside cannot be used in autograd later.",
+      "signature": "with torch.inference_mode(): ...",
+      "example": "with torch.inference_mode():\n    preds = model(x)",
+      "notes": [
+        "Does not switch layers to eval mode."
+      ],
+      "see_also": [
+        "torch.no_grad",
+        "torch.nn.Module.eval"
+      ],
+      "tags": [
+        "autograd",
+        "evaluation"
+      ]
+    },
+    {
+      "name": "torch.int64",
+      "aliases": [
+        "torch.long",
+        "int64"
+      ],
+      "kind": "attribute",
+      "module": "torch",
+      "summary": "64-bit integer dtype; required for class labels and index tensors.",
+      "example": "labels = torch.tensor([0, 2, 1], dtype=torch.int64)",
+      "notes": [
+        "torch.long is an alias."
+      ],
+      "tags": [
+        "dtype"
+      ]
+    },
+    {
+      "name": "torch.isfinite",
+      "aliases": [
+        "isfinite"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Boolean mask: True where values are neither NaN nor +-inf.",
+      "signature": "torch.isfinite(input)",
+      "returns": "BoolTensor.",
+      "example": "assert torch.isfinite(x).all()",
+      "tags": [
+        "validation"
+      ]
+    },
+    {
+      "name": "torch.isinf",
+      "aliases": [
+        "isinf"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Boolean mask: True where values are +-inf.",
+      "signature": "torch.isinf(input)",
+      "returns": "BoolTensor.",
+      "example": "torch.isinf(masked[1, :, :, 2:]).all()",
+      "see_also": [
+        "torch.isfinite"
+      ],
+      "tags": [
+        "validation"
+      ]
+    },
+    {
+      "name": "torch.linspace",
+      "aliases": [
+        "linspace"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "1-D tensor of `steps` evenly spaced values from start to end, both included.",
+      "signature": "torch.linspace(start, end, steps, *, dtype=None, device=None)",
+      "parameters": [
+        {
+          "name": "steps",
+          "type": "int",
+          "description": "Number of points."
+        }
+      ],
+      "returns": "1-D Tensor of length steps.",
+      "example": "torch.linspace(-1, 1, 5)  # tensor([-1.0, -0.5, 0.0, 0.5, 1.0])",
+      "see_also": [
+        "torch.arange"
+      ],
+      "tags": [
+        "creation"
+      ]
+    },
+    {
+      "name": "torch.load",
+      "aliases": [
+        "load"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Loads an object saved with torch.save.",
+      "signature": "torch.load(f, map_location=None, weights_only=True)",
+      "parameters": [
+        {
+          "name": "map_location",
+          "type": "device | str",
+          "default": "None",
+          "description": "Remap storages, e.g. to 'cpu'."
+        },
+        {
+          "name": "weights_only",
+          "type": "bool",
+          "default": "True in recent versions",
+          "description": "Restricts unpickling to tensors and primitive containers (safer)."
+        }
+      ],
+      "returns": "The saved object.",
+      "example": "ckpt = torch.load(path, map_location=device)",
+      "notes": [
+        "Only load files you trust."
+      ],
+      "see_also": [
+        "torch.save",
+        "torch.nn.Module.load_state_dict"
+      ],
+      "tags": [
+        "checkpoint"
+      ]
+    },
+    {
+      "name": "torch.log",
+      "aliases": [
+        "log"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Element-wise natural logarithm.",
+      "signature": "torch.log(input)",
+      "returns": "Tensor of the same shape.",
+      "example": "torch.log(p)",
+      "tags": [
+        "math"
+      ]
+    },
+    {
+      "name": "torch.manual_seed",
+      "aliases": [
+        "manual_seed"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Seeds the global random number generator (CPU and, on recent versions, all CUDA devices).",
+      "signature": "torch.manual_seed(seed)",
+      "parameters": [
+        {
+          "name": "seed",
+          "type": "int",
+          "description": "Seed value."
+        }
+      ],
+      "returns": "The default torch.Generator.",
+      "example": "torch.manual_seed(42)",
+      "notes": [
+        "Also seed Python's random and NumPy if you use them; GPU kernels can still be non-deterministic."
+      ],
+      "see_also": [
+        "torch.cuda.manual_seed_all",
+        "torch.backends.cudnn.deterministic"
+      ],
+      "tags": [
+        "random",
+        "reproducibility"
+      ]
+    },
+    {
+      "name": "torch.matmul",
+      "aliases": [
+        "@",
+        "matmul",
+        "Tensor.matmul"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Matrix product with broadcasting: 1-D dot, 2-D matmul, or batched matmul over leading dimensions. The @ operator calls it.",
+      "signature": "torch.matmul(input, other)",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "Tensor",
+          "description": "Left operand."
+        },
+        {
+          "name": "other",
+          "type": "Tensor",
+          "description": "Right operand."
+        }
+      ],
+      "returns": "Product Tensor.",
+      "example": "out = w_row @ cols  # (C_out, K) @ (N, K, L) -> (N, C_out, L)",
+      "notes": [
+        "The last two dims are the matrix dims; earlier dims are batch dims and broadcast.",
+        "torch.mm is strictly 2-D; torch.bmm is strictly 3-D."
+      ],
+      "see_also": [
+        "torch.mm",
+        "torch.bmm"
+      ],
+      "tags": [
+        "linear-algebra"
+      ]
+    },
+    {
+      "name": "torch.median",
+      "aliases": [
+        "Tensor.median",
+        "median"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Median of all values; for an even count, the LOWER of the two middle values.",
+      "signature": "torch.median(input)",
+      "returns": "0-dim Tensor.",
+      "example": "w = torch.median(freq) / freq",
+      "tags": [
+        "reduction"
+      ]
+    },
+    {
+      "name": "torch.meshgrid",
+      "aliases": [
+        "meshgrid"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Coordinate grids from 1-D tensors. Use indexing='ij' for matrix (row, column) ordering.",
+      "signature": "torch.meshgrid(*tensors, indexing=None)",
+      "returns": "Tuple of tensors.",
+      "example": "yy, xx = torch.meshgrid(torch.linspace(-1, 1, 16), torch.linspace(-1, 1, 16), indexing='ij')",
+      "notes": [
+        "Always pass indexing explicitly."
+      ],
+      "see_also": [
+        "torch.linspace"
+      ],
+      "tags": [
+        "creation"
+      ]
+    },
+    {
+      "name": "torch.mm",
+      "aliases": [
+        "mm"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Matrix product of two 2-D tensors (no broadcasting).",
+      "signature": "torch.mm(input, mat2)",
+      "returns": "(n, p) Tensor.",
+      "example": "torch.mm(A, B.t())",
+      "see_also": [
+        "torch.matmul"
+      ],
+      "tags": [
+        "linear-algebra"
+      ]
+    },
+    {
+      "name": "torch.nn.BatchNorm2d",
+      "aliases": [
+        "nn.BatchNorm2d",
+        "BatchNorm2d"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "Normalises each channel over the batch and spatial dims, then applies a learnable scale (weight) and shift (bias).",
+      "signature": "torch.nn.BatchNorm2d(num_features, eps=1e-5, momentum=0.1)",
+      "parameters": [
+        {
+          "name": "num_features",
+          "type": "int",
+          "description": "Number of channels C."
+        }
+      ],
+      "example": "bn = nn.BatchNorm2d(64)",
+      "notes": [
+        "Train mode uses batch statistics and updates running averages; eval mode uses the running averages.",
+        "Convolutions before a BatchNorm don't need a bias."
+      ],
+      "see_also": [
+        "torch.nn.Module.eval"
+      ],
+      "tags": [
+        "layer",
+        "normalisation"
+      ]
+    },
+    {
+      "name": "torch.nn.Conv2d",
+      "aliases": [
+        "nn.Conv2d",
+        "Conv2d"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "2-D convolution (cross-correlation) over (N, C_in, H, W) inputs.",
+      "signature": "torch.nn.Conv2d(in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, bias=True)",
+      "parameters": [
+        {
+          "name": "in_channels",
+          "type": "int",
+          "description": "Channels of the input."
+        },
+        {
+          "name": "out_channels",
+          "type": "int",
+          "description": "Number of filters."
+        },
+        {
+          "name": "kernel_size",
+          "type": "int | tuple",
+          "description": "Filter size."
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "default": "1",
+          "description": "Step."
+        },
+        {
+          "name": "padding",
+          "type": "int",
+          "default": "0",
+          "description": "Zero padding on each side."
+        },
+        {
+          "name": "bias",
+          "type": "bool",
+          "default": "True",
+          "description": "Learn a bias (redundant right before BatchNorm)."
+        }
+      ],
+      "returns": "Tensor (N, C_out, H_out, W_out) with H_out = floor((H + 2p - d(k-1) - 1) / s) + 1.",
+      "example": "conv = nn.Conv2d(3, 32, kernel_size=3, padding=1)\nconv(torch.randn(8, 3, 32, 32)).shape  # (8, 32, 32, 32)",
+      "notes": [
+        "kernel 3 + padding 1 + stride 1 keeps H and W.",
+        "Weight shape: (out_channels, in_channels, kH, kW)."
+      ],
+      "see_also": [
+        "torch.nn.functional.conv2d",
+        "torch.nn.ConvTranspose2d"
+      ],
+      "tags": [
+        "layer",
+        "conv"
+      ]
+    },
+    {
+      "name": "torch.nn.ConvTranspose2d",
+      "aliases": [
+        "nn.ConvTranspose2d",
+        "ConvTranspose2d"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "Transposed convolution - learnable upsampling. Each input pixel scatters a scaled copy of the filter into the output.",
+      "signature": "torch.nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride=1, padding=0, output_padding=0, bias=True)",
+      "returns": "H_out = (H - 1) * stride - 2 * padding + kernel_size (+ output_padding).",
+      "example": "up = nn.ConvTranspose2d(64, 32, kernel_size=2, stride=2)  # doubles H and W",
+      "notes": [
+        "Weight shape is (in_channels, out_channels, kH, kW) - the reverse of Conv2d."
+      ],
+      "see_also": [
+        "torch.nn.functional.conv_transpose2d"
+      ],
+      "tags": [
+        "layer",
+        "upsampling"
+      ]
+    },
+    {
+      "name": "torch.nn.CrossEntropyLoss",
+      "aliases": [
+        "nn.CrossEntropyLoss",
+        "CrossEntropyLoss"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "signature": "torch.nn.CrossEntropyLoss(weight=None, ignore_index=-100, reduction='mean', label_smoothing=0.0)",
+      "summary": "Softmax + negative log-likelihood in one. Takes raw logits and integer class indices.",
+      "parameters": [
+        {
+          "name": "weight",
+          "type": "Tensor",
+          "default": "None",
+          "description": "Per-class rescaling weights."
+        },
+        {
+          "name": "label_smoothing",
+          "type": "float",
+          "default": "0.0",
+          "description": "Smoothing factor in [0, 1]."
+        }
+      ],
+      "returns": "Scalar tensor.",
+      "example": "criterion = nn.CrossEntropyLoss()\nloss = criterion(logits, labels)  # logits (N, C), labels (N,) int64",
+      "notes": [
+        "Do NOT apply softmax before this loss."
+      ],
+      "tags": [
+        "loss",
+        "classification"
+      ]
+    },
+    {
+      "name": "torch.nn.Dropout",
+      "aliases": [
+        "nn.Dropout",
+        "Dropout"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "Randomly zeroes elements with probability p during training (and rescales the rest); identity in eval mode.",
+      "signature": "torch.nn.Dropout(p=0.5)",
+      "parameters": [
+        {
+          "name": "p",
+          "type": "float",
+          "default": "0.5",
+          "description": "Drop probability."
+        }
+      ],
+      "example": "drop = nn.Dropout(0.1)",
+      "notes": [
+        "Disabled by model.eval()."
+      ],
+      "see_also": [
+        "torch.nn.Module.eval"
+      ],
+      "tags": [
+        "layer",
+        "regularisation"
+      ]
+    },
+    {
+      "name": "torch.nn.Embedding",
+      "aliases": [
+        "nn.Embedding",
+        "Embedding"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "Lookup table mapping integer ids to learnable vectors.",
+      "signature": "torch.nn.Embedding(num_embeddings, embedding_dim)",
+      "parameters": [
+        {
+          "name": "num_embeddings",
+          "type": "int",
+          "description": "Vocabulary size."
+        },
+        {
+          "name": "embedding_dim",
+          "type": "int",
+          "description": "Vector size."
+        }
+      ],
+      "returns": "(*, embedding_dim) Tensor for an int64 input of shape (*).",
+      "example": "emb = nn.Embedding(30522, 128)\nemb(torch.tensor([[1, 2, 3]])).shape  # (1, 3, 128)",
+      "tags": [
+        "layer",
+        "nlp"
+      ]
+    },
+    {
+      "name": "torch.nn.GELU",
+      "aliases": [
+        "nn.GELU",
+        "GELU"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "Gaussian Error Linear Unit activation: x * Phi(x), a smooth ReLU.",
+      "signature": "torch.nn.GELU()",
+      "example": "mlp = nn.Sequential(nn.Linear(d, 4*d), nn.GELU(), nn.Linear(4*d, d))",
+      "see_also": [
+        "torch.nn.functional.gelu"
+      ],
+      "tags": [
+        "activation"
+      ]
+    },
+    {
+      "name": "torch.nn.Identity",
+      "aliases": [
+        "nn.Identity",
+        "Identity"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "Layer that returns its input unchanged - a placeholder for optional layers.",
+      "signature": "torch.nn.Identity()",
+      "example": "self.bn = nn.BatchNorm2d(c) if use_bn else nn.Identity()",
+      "tags": [
+        "layer"
+      ]
+    },
+    {
+      "name": "torch.nn.LayerNorm",
+      "aliases": [
+        "nn.LayerNorm",
+        "LayerNorm"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "Normalises over the last dimension(s) of each sample, then applies learnable scale and shift.",
+      "signature": "torch.nn.LayerNorm(normalized_shape, eps=1e-5)",
+      "parameters": [
+        {
+          "name": "normalized_shape",
+          "type": "int | tuple",
+          "description": "Size of the trailing dimension(s) to normalise."
+        }
+      ],
+      "example": "norm = nn.LayerNorm(512)  # applied to (N, P, 512)",
+      "notes": [
+        "Independent of batch size, unlike BatchNorm."
+      ],
+      "see_also": [
+        "torch.nn.BatchNorm2d"
+      ],
+      "tags": [
+        "layer",
+        "normalisation"
+      ]
+    },
+    {
+      "name": "torch.nn.Linear",
+      "aliases": [
+        "nn.Linear",
+        "Linear"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "signature": "torch.nn.Linear(in_features, out_features, bias=True)",
+      "summary": "Fully connected layer: y = x @ W.T + b. Applied to the last dimension of the input.",
+      "parameters": [
+        {
+          "name": "in_features",
+          "type": "int",
+          "description": "Size of each input sample (last dim)."
+        },
+        {
+          "name": "out_features",
+          "type": "int",
+          "description": "Size of each output sample."
+        },
+        {
+          "name": "bias",
+          "type": "bool",
+          "default": "True",
+          "description": "Learn an additive bias."
+        }
+      ],
+      "returns": "Tensor of shape (*, out_features).",
+      "example": "layer = nn.Linear(784, 10)\nlogits = layer(torch.randn(32, 784))  # (32, 10)",
+      "notes": [
+        "Input must be (*, in_features); flatten images first.",
+        "layer.weight has shape (out_features, in_features)."
+      ],
+      "see_also": [
+        "torch.flatten"
+      ],
+      "tags": [
+        "layer",
+        "dense"
+      ]
+    },
+    {
+      "name": "torch.nn.MSELoss",
+      "aliases": [
+        "nn.MSELoss",
+        "MSELoss"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "signature": "torch.nn.MSELoss(reduction='mean')",
+      "summary": "Mean squared error between prediction and target. Call as criterion(pred, target).",
+      "parameters": [
+        {
+          "name": "reduction",
+          "type": "str",
+          "default": "'mean'",
+          "description": "'mean', 'sum' or 'none'."
+        }
+      ],
+      "returns": "Scalar tensor (for 'mean'/'sum').",
+      "example": "criterion = nn.MSELoss()\nloss = criterion(pred, y)",
+      "notes": [
+        "pred and target should have the same shape, otherwise broadcasting may silently give a wrong loss."
+      ],
+      "tags": [
+        "loss",
+        "regression"
+      ]
+    },
+    {
+      "name": "torch.nn.Module",
+      "aliases": [
+        "nn.Module",
+        "Module"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "Base class of all networks and layers. Attributes that are modules/Parameters/buffers are registered automatically.",
+      "signature": "class Net(nn.Module): def __init__(self): super().__init__() ...",
+      "example": "class Net(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc = nn.Linear(4, 2)\n    def forward(self, x):\n        return self.fc(x)",
+      "notes": [
+        "Call super().__init__() first.",
+        "Call model(x), not model.forward(x), so hooks run."
+      ],
+      "see_also": [
+        "torch.nn.Module.parameters",
+        "torch.nn.Module.eval"
+      ],
+      "tags": [
+        "module"
+      ]
+    },
+    {
+      "name": "torch.nn.Module.eval",
+      "aliases": [
+        "model.eval",
+        "eval"
+      ],
+      "kind": "method",
+      "module": "torch.nn",
+      "signature": "Module.eval()",
+      "summary": "Puts the module and its children in evaluation mode (dropout off, batch-norm uses running statistics). Equivalent to train(False).",
+      "returns": "self",
+      "notes": [
+        "Call model.train() to go back to training mode."
+      ],
+      "see_also": [
+        "torch.no_grad"
+      ],
+      "tags": [
+        "evaluation"
+      ]
+    },
+    {
+      "name": "torch.nn.Module.load_state_dict",
+      "aliases": [
+        "Module.load_state_dict",
+        "model.load_state_dict",
+        "load_state_dict"
+      ],
+      "kind": "method",
+      "module": "torch.nn.Module",
+      "summary": "Copies parameters and buffers from a state dict into the module.",
+      "signature": "Module.load_state_dict(state_dict, strict=True)",
+      "parameters": [
+        {
+          "name": "strict",
+          "type": "bool",
+          "default": "True",
+          "description": "Require exactly matching keys."
+        }
+      ],
+      "returns": "Named tuple (missing_keys, unexpected_keys).",
+      "example": "model.load_state_dict(best_state)",
+      "see_also": [
+        "torch.nn.Module.state_dict"
+      ],
+      "tags": [
+        "checkpoint"
+      ]
+    },
+    {
+      "name": "torch.nn.Module.modules",
+      "aliases": [
+        "Module.modules",
+        "model.modules",
+        "modules"
+      ],
+      "kind": "method",
+      "module": "torch.nn.Module",
+      "summary": "Iterator over the module itself and all submodules, recursively.",
+      "signature": "Module.modules()",
+      "returns": "Iterator of Modules.",
+      "example": "for m in model.modules():\n    if isinstance(m, nn.Conv2d): ...",
+      "see_also": [
+        "torch.nn.init.kaiming_normal_"
+      ],
+      "tags": [
+        "module",
+        "initialisation"
+      ]
+    },
+    {
+      "name": "torch.nn.Module.named_parameters",
+      "aliases": [
+        "Module.named_parameters",
+        "model.named_parameters",
+        "named_parameters"
+      ],
+      "kind": "method",
+      "module": "torch.nn.Module",
+      "summary": "Like parameters() but yields (name, parameter) pairs, e.g. 'layer1.0.conv1.weight'.",
+      "signature": "Module.named_parameters()",
+      "returns": "Iterator of (str, Parameter).",
+      "example": "for name, p in model.named_parameters(): ...",
+      "notes": [
+        "Useful to give pretrained/encoder parameters a different learning rate."
+      ],
+      "see_also": [
+        "torch.nn.Module.parameters"
+      ],
+      "tags": [
+        "module",
+        "optimizer"
+      ]
+    },
+    {
+      "name": "torch.nn.Module.parameters",
+      "aliases": [
+        "Module.parameters",
+        "model.parameters",
+        "parameters"
+      ],
+      "kind": "method",
+      "module": "torch.nn.Module",
+      "summary": "Iterator over all learnable parameters (recursively).",
+      "signature": "Module.parameters(recurse=True)",
+      "returns": "Iterator of Parameters.",
+      "example": "optimizer = optim.SGD(model.parameters(), lr=0.1)\nn = sum(p.numel() for p in model.parameters())",
+      "see_also": [
+        "torch.nn.Module.named_parameters"
+      ],
+      "tags": [
+        "module"
+      ]
+    },
+    {
+      "name": "torch.nn.Module.register_buffer",
+      "aliases": [
+        "Module.register_buffer",
+        "model.register_buffer",
+        "register_buffer"
+      ],
+      "kind": "method",
+      "module": "torch.nn.Module",
+      "summary": "Registers a tensor that moves with the module (.to / .cuda) but is not a parameter.",
+      "signature": "Module.register_buffer(name, tensor, persistent=True)",
+      "parameters": [
+        {
+          "name": "persistent",
+          "type": "bool",
+          "default": "True",
+          "description": "False keeps it out of state_dict."
+        }
+      ],
+      "example": "self.register_buffer('pe', sinusoidal_encoding(512, 128), persistent=False)",
+      "notes": [
+        "Use for fixed tables, running statistics, masks."
+      ],
+      "see_also": [
+        "torch.nn.Parameter"
+      ],
+      "tags": [
+        "module"
+      ]
+    },
+    {
+      "name": "torch.nn.Module.register_forward_hook",
+      "aliases": [
+        "Module.register_forward_hook",
+        "model.register_forward_hook",
+        "register_forward_hook"
+      ],
+      "kind": "method",
+      "module": "torch.nn.Module",
+      "summary": "Registers a function called after forward with (module, input, output).",
+      "signature": "Module.register_forward_hook(hook)",
+      "returns": "A handle; call .remove() when done.",
+      "example": "h = layer.register_forward_hook(lambda m, i, o: print(o.shape))\nmodel(x)\nh.remove()",
+      "tags": [
+        "debugging"
+      ]
+    },
+    {
+      "name": "torch.nn.Module.state_dict",
+      "aliases": [
+        "Module.state_dict",
+        "model.state_dict",
+        "state_dict"
+      ],
+      "kind": "method",
+      "module": "torch.nn.Module",
+      "summary": "Ordered dict of all parameters and persistent buffers.",
+      "signature": "Module.state_dict()",
+      "returns": "OrderedDict[str, Tensor].",
+      "example": "best_state = {k: v.cpu().clone() for k, v in model.state_dict().items()}",
+      "notes": [
+        "Values alias the live parameters: clone (or deepcopy) to keep a snapshot."
+      ],
+      "see_also": [
+        "torch.nn.Module.load_state_dict",
+        "torch.save"
+      ],
+      "tags": [
+        "checkpoint"
+      ]
+    },
+    {
+      "name": "torch.nn.Module.train",
+      "aliases": [
+        "Module.train",
+        "model.train",
+        "train"
+      ],
+      "kind": "method",
+      "module": "torch.nn.Module",
+      "summary": "Sets training mode (dropout active, batch norm uses batch statistics).",
+      "signature": "Module.train(mode=True)",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "bool",
+          "default": "True",
+          "description": "False is the same as eval()."
+        }
+      ],
+      "returns": "self.",
+      "example": "model.train()",
+      "notes": [
+        "Call it again after evaluating - eval() persists."
+      ],
+      "see_also": [
+        "torch.nn.Module.eval"
+      ],
+      "tags": [
+        "training"
+      ]
+    },
+    {
+      "name": "torch.nn.ModuleList",
+      "aliases": [
+        "nn.ModuleList",
+        "ModuleList"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "List of modules that are properly registered (parameters tracked, saved, moved to device). It has no forward.",
+      "signature": "torch.nn.ModuleList(modules=None)",
+      "example": "self.blocks = nn.ModuleList([Block(d) for _ in range(depth)])",
+      "notes": [
+        "A plain Python list hides its modules from PyTorch."
+      ],
+      "see_also": [
+        "torch.nn.Sequential"
+      ],
+      "tags": [
+        "container"
+      ]
+    },
+    {
+      "name": "torch.nn.MultiheadAttention",
+      "aliases": [
+        "nn.MultiheadAttention",
+        "MultiheadAttention"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "Multi-head attention layer (projects Q, K, V, attends, projects the output).",
+      "signature": "torch.nn.MultiheadAttention(embed_dim, num_heads, dropout=0.0, batch_first=False)",
+      "parameters": [
+        {
+          "name": "batch_first",
+          "type": "bool",
+          "default": "False",
+          "description": "Use (N, P, D) instead of (P, N, D)."
+        },
+        {
+          "name": "key_padding_mask",
+          "type": "BoolTensor",
+          "description": "forward argument (N, P): True marks keys to IGNORE - the opposite of a 'real token' mask."
+        }
+      ],
+      "returns": "forward returns (output, attention_weights).",
+      "example": "mha = nn.MultiheadAttention(16, 4, batch_first=True)\nout, w = mha(x, x, x, key_padding_mask=~mask, average_attn_weights=False)",
+      "notes": [
+        "Packed projection weights are in.in_proj_weight / in_proj_bias; output projection is out_proj."
+      ],
+      "see_also": [
+        "torch.nn.TransformerEncoderLayer"
+      ],
+      "tags": [
+        "layer",
+        "attention"
+      ]
+    },
+    {
+      "name": "torch.nn.NLLLoss",
+      "aliases": [
+        "nn.NLLLoss",
+        "NLLLoss"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "Negative log-likelihood loss: expects LOG-probabilities (e.g. from log_softmax) and class indices.",
+      "signature": "torch.nn.NLLLoss(weight=None, reduction='mean')",
+      "example": "loss = nn.NLLLoss()(F.log_softmax(logits, 1), y)",
+      "notes": [
+        "CrossEntropyLoss = log_softmax + NLLLoss."
+      ],
+      "see_also": [
+        "torch.nn.CrossEntropyLoss",
+        "torch.nn.functional.log_softmax"
+      ],
+      "tags": [
+        "loss"
+      ]
+    },
+    {
+      "name": "torch.nn.Parameter",
+      "aliases": [
+        "nn.Parameter",
+        "Parameter"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "Tensor wrapper that marks data as a learnable parameter of a Module.",
+      "signature": "torch.nn.Parameter(data, requires_grad=True)",
+      "example": "self.pos = nn.Parameter(torch.zeros(1, 64, 512))\nnn.init.normal_(self.pos, std=0.02)",
+      "notes": [
+        "A plain tensor attribute is not trained, not moved by .to(), and not saved."
+      ],
+      "see_also": [
+        "torch.nn.Module.register_buffer"
+      ],
+      "tags": [
+        "module"
+      ]
+    },
+    {
+      "name": "torch.nn.PixelShuffle",
+      "aliases": [
+        "nn.PixelShuffle",
+        "PixelShuffle"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "Rearranges (N, C*r^2, H, W) into (N, C, H*r, W*r) - sub-pixel upsampling.",
+      "signature": "torch.nn.PixelShuffle(upscale_factor)",
+      "example": "nn.Sequential(nn.Conv2d(c, 4*c_out, 1), nn.PixelShuffle(2))",
+      "see_also": [
+        "torch.nn.functional.pixel_shuffle"
+      ],
+      "tags": [
+        "layer",
+        "upsampling"
+      ]
+    },
+    {
+      "name": "torch.nn.Sequential",
+      "aliases": [
+        "nn.Sequential",
+        "Sequential"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "Container that applies modules one after another.",
+      "signature": "torch.nn.Sequential(*modules)",
+      "example": "block = nn.Sequential(nn.Linear(4, 8), nn.GELU(), nn.Linear(8, 4))",
+      "notes": [
+        "Unpack a Python list with nn.Sequential(*layers)."
+      ],
+      "see_also": [
+        "torch.nn.ModuleList"
+      ],
+      "tags": [
+        "container"
+      ]
+    },
+    {
+      "name": "torch.nn.TransformerEncoderLayer",
+      "aliases": [
+        "nn.TransformerEncoderLayer",
+        "TransformerEncoderLayer"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "One transformer encoder block: self-attention + feed-forward, each with residual and LayerNorm (post-norm by default, pre-norm with norm_first=True).",
+      "signature": "torch.nn.TransformerEncoderLayer(d_model, nhead, dim_feedforward=2048, dropout=0.1, activation='relu', batch_first=False, norm_first=False)",
+      "example": "layer = nn.TransformerEncoderLayer(16, 1, dim_feedforward=64, dropout=0.0, activation='gelu', batch_first=True, norm_first=True)",
+      "see_also": [
+        "torch.nn.MultiheadAttention"
+      ],
+      "tags": [
+        "layer",
+        "transformer"
+      ]
+    },
+    {
+      "name": "torch.nn.Upsample",
+      "aliases": [
+        "nn.Upsample",
+        "Upsample"
+      ],
+      "kind": "class",
+      "module": "torch.nn",
+      "summary": "Resizes by a scale factor or to a size with a chosen interpolation mode.",
+      "signature": "torch.nn.Upsample(size=None, scale_factor=None, mode='nearest', align_corners=None)",
+      "example": "up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=False)",
+      "see_also": [
+        "torch.nn.functional.interpolate"
+      ],
+      "tags": [
+        "layer",
+        "upsampling"
+      ]
+    },
+    {
+      "name": "torch.nn.functional.adaptive_avg_pool2d",
+      "aliases": [
+        "F.adaptive_avg_pool2d",
+        "nn.functional.adaptive_avg_pool2d",
+        "adaptive_avg_pool2d"
+      ],
+      "kind": "function",
+      "module": "torch.nn.functional",
+      "summary": "Average pooling to a fixed output size regardless of the input size.",
+      "signature": "torch.nn.functional.adaptive_avg_pool2d(input, output_size)",
+      "returns": "(N, C, *output_size).",
+      "example": "F.adaptive_avg_pool2d(x, (1, 1))  # global average pool",
+      "see_also": [
+        "torch.flatten"
+      ],
+      "tags": [
+        "pooling"
+      ]
+    },
+    {
+      "name": "torch.nn.functional.binary_cross_entropy_with_logits",
+      "aliases": [
+        "F.binary_cross_entropy_with_logits",
+        "nn.functional.binary_cross_entropy_with_logits",
+        "binary_cross_entropy_with_logits"
+      ],
+      "kind": "function",
+      "module": "torch.nn.functional",
+      "summary": "Sigmoid + binary cross-entropy from raw logits and 0/1 float targets (stable).",
+      "signature": "torch.nn.functional.binary_cross_entropy_with_logits(input, target, reduction='mean')",
+      "parameters": [
+        {
+          "name": "target",
+          "type": "Tensor",
+          "description": "Same shape as input, float in [0, 1]."
+        },
+        {
+          "name": "reduction",
+          "type": "str",
+          "default": "'mean'",
+          "description": "'mean' | 'sum' | 'none'."
+        }
+      ],
+      "returns": "Tensor.",
+      "example": "loss = F.binary_cross_entropy_with_logits(logits, labels.float())",
+      "notes": [
+        "Don't pass sigmoid(logits)."
+      ],
+      "see_also": [
+        "torch.sigmoid"
+      ],
+      "tags": [
+        "loss"
+      ]
+    },
+    {
+      "name": "torch.nn.functional.conv2d",
+      "aliases": [
+        "F.conv2d",
+        "nn.functional.conv2d",
+        "conv2d"
+      ],
+      "kind": "function",
+      "module": "torch.nn.functional",
+      "summary": "Functional 2-D convolution (cross-correlation) with explicit weight tensor.",
+      "signature": "torch.nn.functional.conv2d(input, weight, bias=None, stride=1, padding=0, dilation=1, groups=1)",
+      "parameters": [
+        {
+          "name": "weight",
+          "type": "Tensor",
+          "description": "(C_out, C_in/groups, kH, kW)."
+        }
+      ],
+      "returns": "Tensor.",
+      "example": "y = F.conv2d(x, w, stride=2, padding=1)",
+      "notes": [
+        "No filter flipping: it is a correlation."
+      ],
+      "see_also": [
+        "torch.nn.Conv2d"
+      ],
+      "tags": [
+        "conv"
+      ]
+    },
+    {
+      "name": "torch.nn.functional.conv_transpose2d",
+      "aliases": [
+        "F.conv_transpose2d",
+        "nn.functional.conv_transpose2d",
+        "conv_transpose2d"
+      ],
+      "kind": "function",
+      "module": "torch.nn.functional",
+      "summary": "Functional transposed convolution.",
+      "signature": "torch.nn.functional.conv_transpose2d(input, weight, bias=None, stride=1, padding=0, output_padding=0)",
+      "parameters": [
+        {
+          "name": "weight",
+          "type": "Tensor",
+          "description": "(C_in, C_out/groups, kH, kW)."
+        }
+      ],
+      "returns": "Tensor.",
+      "example": "y = F.conv_transpose2d(x, w, stride=2, padding=1)",
+      "see_also": [
+        "torch.nn.ConvTranspose2d"
+      ],
+      "tags": [
+        "conv",
+        "upsampling"
+      ]
+    },
+    {
+      "name": "torch.nn.functional.cross_entropy",
+      "aliases": [
+        "F.cross_entropy",
+        "nn.functional.cross_entropy",
+        "cross_entropy"
+      ],
+      "kind": "function",
+      "module": "torch.nn.functional",
+      "summary": "Softmax + negative log-likelihood from RAW logits and integer class targets; also works per pixel for (N, C, H, W) logits and (N, H, W) targets.",
+      "signature": "torch.nn.functional.cross_entropy(input, target, weight=None, reduction='mean')",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "Tensor",
+          "description": "Raw scores (N, C) or (N, C, d1, ...)."
+        },
+        {
+          "name": "target",
+          "type": "LongTensor",
+          "description": "Class indices (N) or (N, d1, ...)."
+        },
+        {
+          "name": "weight",
+          "type": "Tensor",
+          "default": "None",
+          "description": "Per-class weights; the 'mean' reduction divides by the sum of used weights."
+        }
+      ],
+      "returns": "0-dim Tensor (mean).",
+      "example": "loss = F.cross_entropy(logits, labels)",
+      "notes": [
+        "Never apply softmax first."
+      ],
+      "see_also": [
+        "torch.nn.CrossEntropyLoss",
+        "torch.nn.functional.log_softmax"
+      ],
+      "tags": [
+        "loss"
+      ]
+    },
+    {
+      "name": "torch.nn.functional.gelu",
+      "aliases": [
+        "F.gelu",
+        "nn.functional.gelu",
+        "gelu"
+      ],
+      "kind": "function",
+      "module": "torch.nn.functional",
+      "summary": "GELU activation x * Phi(x).",
+      "signature": "torch.nn.functional.gelu(input, approximate='none')",
+      "returns": "Tensor.",
+      "example": "F.gelu(x)",
+      "see_also": [
+        "torch.nn.GELU"
+      ],
+      "tags": [
+        "activation"
+      ]
+    },
+    {
+      "name": "torch.nn.functional.interpolate",
+      "aliases": [
+        "F.interpolate",
+        "nn.functional.interpolate",
+        "interpolate"
+      ],
+      "kind": "function",
+      "module": "torch.nn.functional",
+      "summary": "Resizes a batch of images (nearest, bilinear, bicubic, ...).",
+      "signature": "torch.nn.functional.interpolate(input, size=None, scale_factor=None, mode='nearest', align_corners=None, antialias=False)",
+      "parameters": [
+        {
+          "name": "align_corners",
+          "type": "bool",
+          "default": "None",
+          "description": "False aligns pixel centres, True aligns corner pixels."
+        },
+        {
+          "name": "antialias",
+          "type": "bool",
+          "default": "False",
+          "description": "Low-pass filter when downsampling."
+        }
+      ],
+      "returns": "Resized Tensor.",
+      "example": "F.interpolate(x, size=(64, 64), mode='bilinear', align_corners=False)",
+      "notes": [
+        "Use mode='nearest' (or 'nearest-exact') for label masks so classes aren't blended."
+      ],
+      "see_also": [
+        "torch.nn.Upsample"
+      ],
+      "tags": [
+        "upsampling"
+      ]
+    },
+    {
+      "name": "torch.nn.functional.log_softmax",
+      "aliases": [
+        "F.log_softmax",
+        "nn.functional.log_softmax",
+        "log_softmax"
+      ],
+      "kind": "function",
+      "module": "torch.nn.functional",
+      "summary": "log(softmax(x)) computed in a numerically stable way.",
+      "signature": "torch.nn.functional.log_softmax(input, dim)",
+      "parameters": [
+        {
+          "name": "dim",
+          "type": "int",
+          "description": "Class dimension."
+        }
+      ],
+      "returns": "Tensor of log-probabilities.",
+      "example": "log_probs = F.log_softmax(logits, dim=1)",
+      "notes": [
+        "Better than log(softmax(x)), which underflows for confident predictions."
+      ],
+      "see_also": [
+        "torch.nn.functional.cross_entropy",
+        "torch.gather"
+      ],
+      "tags": [
+        "loss"
+      ]
+    },
+    {
+      "name": "torch.nn.functional.max_pool2d",
+      "aliases": [
+        "F.max_pool2d",
+        "nn.functional.max_pool2d",
+        "max_pool2d"
+      ],
+      "kind": "function",
+      "module": "torch.nn.functional",
+      "summary": "2-D max pooling.",
+      "signature": "torch.nn.functional.max_pool2d(input, kernel_size, stride=None, padding=0)",
+      "parameters": [
+        {
+          "name": "stride",
+          "type": "int",
+          "default": "kernel_size",
+          "description": "Defaults to the kernel size."
+        }
+      ],
+      "returns": "H_out = floor((H + 2p - k) / s) + 1.",
+      "example": "F.max_pool2d(x, kernel_size=2, stride=2)  # halves H and W",
+      "tags": [
+        "pooling"
+      ]
+    },
+    {
+      "name": "torch.nn.functional.one_hot",
+      "aliases": [
+        "F.one_hot",
+        "nn.functional.one_hot",
+        "one_hot"
+      ],
+      "kind": "function",
+      "module": "torch.nn.functional",
+      "summary": "One-hot encodes an int64 tensor by appending a class dimension.",
+      "signature": "torch.nn.functional.one_hot(tensor, num_classes=-1)",
+      "returns": "LongTensor of shape (*, num_classes).",
+      "example": "Y = F.one_hot(target, K).permute(0, 3, 1, 2).to(P.dtype)  # (N, H, W) -> (N, K, H, W)",
+      "notes": [
+        "The class axis is LAST; permute it to dim 1 for NCHW, and cast to float."
+      ],
+      "tags": [
+        "encoding"
+      ]
+    },
+    {
+      "name": "torch.nn.functional.pixel_shuffle",
+      "aliases": [
+        "F.pixel_shuffle",
+        "nn.functional.pixel_shuffle",
+        "pixel_shuffle"
+      ],
+      "kind": "function",
+      "module": "torch.nn.functional",
+      "summary": "Functional PixelShuffle: (*, C*r^2, H, W) -> (*, C, H*r, W*r).",
+      "signature": "torch.nn.functional.pixel_shuffle(input, upscale_factor)",
+      "returns": "Tensor.",
+      "example": "F.pixel_shuffle(x, 2)",
+      "see_also": [
+        "torch.nn.PixelShuffle"
+      ],
+      "tags": [
+        "upsampling"
+      ]
+    },
+    {
+      "name": "torch.nn.functional.relu",
+      "aliases": [
+        "F.relu",
+        "nn.functional.relu",
+        "relu"
+      ],
+      "kind": "function",
+      "module": "torch.nn.functional",
+      "summary": "Rectified linear unit: max(0, x).",
+      "signature": "torch.nn.functional.relu(input)",
+      "returns": "Tensor.",
+      "example": "x = F.relu(self.conv1(x))",
+      "tags": [
+        "activation"
+      ]
+    },
+    {
+      "name": "torch.nn.functional.silu",
+      "aliases": [
+        "F.silu",
+        "nn.functional.silu",
+        "silu"
+      ],
+      "kind": "function",
+      "module": "torch.nn.functional",
+      "summary": "SiLU / swish activation: x * sigmoid(x).",
+      "signature": "torch.nn.functional.silu(input)",
+      "returns": "Tensor.",
+      "example": "gate = F.silu(self.w1(x))  # == g * torch.sigmoid(g)",
+      "see_also": [
+        "torch.sigmoid"
+      ],
+      "tags": [
+        "activation"
+      ]
+    },
+    {
+      "name": "torch.nn.functional.softmax",
+      "aliases": [
+        "F.softmax",
+        "nn.functional.softmax",
+        "softmax"
+      ],
+      "kind": "function",
+      "module": "torch.nn.functional",
+      "summary": "Softmax over a dimension.",
+      "signature": "torch.nn.functional.softmax(input, dim)",
+      "parameters": [
+        {
+          "name": "dim",
+          "type": "int",
+          "description": "Dimension that sums to 1 (always pass it)."
+        }
+      ],
+      "returns": "Tensor of probabilities.",
+      "example": "P = F.softmax(logits, dim=1)  # class axis of (N, K, H, W)",
+      "see_also": [
+        "torch.softmax",
+        "torch.nn.functional.log_softmax"
+      ],
+      "tags": [
+        "activation"
+      ]
+    },
+    {
+      "name": "torch.nn.init.kaiming_normal_",
+      "aliases": [
+        "nn.init.kaiming_normal_",
+        "init.kaiming_normal_"
+      ],
+      "kind": "function",
+      "module": "torch.nn.init",
+      "summary": "He initialisation: normal with variance 2/fan, suited to ReLU networks.",
+      "signature": "torch.nn.init.kaiming_normal_(tensor, a=0, mode='fan_in', nonlinearity='leaky_relu')",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "str",
+          "default": "'fan_in'",
+          "description": "'fan_in' preserves forward variance, 'fan_out' backward."
+        },
+        {
+          "name": "nonlinearity",
+          "type": "str",
+          "default": "'leaky_relu'",
+          "description": "Use 'relu' for ReLU networks."
+        }
+      ],
+      "returns": "The tensor.",
+      "example": "nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')",
+      "see_also": [
+        "torch.nn.init.xavier_uniform_"
+      ],
+      "tags": [
+        "initialisation"
+      ]
+    },
+    {
+      "name": "torch.nn.init.normal_",
+      "aliases": [
+        "nn.init.normal_",
+        "init.normal_"
+      ],
+      "kind": "function",
+      "module": "torch.nn.init",
+      "summary": "Fills a tensor with N(mean, std^2) values in place.",
+      "signature": "torch.nn.init.normal_(tensor, mean=0.0, std=1.0)",
+      "returns": "The tensor.",
+      "example": "nn.init.normal_(self.pos, std=0.02)",
+      "tags": [
+        "initialisation"
+      ]
+    },
+    {
+      "name": "torch.nn.init.ones_",
+      "aliases": [
+        "nn.init.ones_",
+        "init.ones_"
+      ],
+      "kind": "function",
+      "module": "torch.nn.init",
+      "summary": "Fills a tensor with 1 in place.",
+      "signature": "torch.nn.init.ones_(tensor)",
+      "returns": "The tensor.",
+      "example": "nn.init.ones_(bn.weight)",
+      "see_also": [
+        "torch.nn.init.zeros_"
+      ],
+      "tags": [
+        "initialisation"
+      ]
+    },
+    {
+      "name": "torch.nn.init.xavier_normal_",
+      "aliases": [
+        "nn.init.xavier_normal_",
+        "init.xavier_normal_"
+      ],
+      "kind": "function",
+      "module": "torch.nn.init",
+      "summary": "Glorot initialisation with a normal distribution.",
+      "signature": "torch.nn.init.xavier_normal_(tensor, gain=1.0)",
+      "returns": "The tensor.",
+      "example": "nn.init.xavier_normal_(m.weight)",
+      "see_also": [
+        "torch.nn.init.xavier_uniform_"
+      ],
+      "tags": [
+        "initialisation"
+      ]
+    },
+    {
+      "name": "torch.nn.init.xavier_uniform_",
+      "aliases": [
+        "nn.init.xavier_uniform_",
+        "init.xavier_uniform_"
+      ],
+      "kind": "function",
+      "module": "torch.nn.init",
+      "summary": "Glorot initialisation: uniform with variance 2 / (fan_in + fan_out).",
+      "signature": "torch.nn.init.xavier_uniform_(tensor, gain=1.0)",
+      "returns": "The tensor.",
+      "example": "nn.init.xavier_uniform_(m.weight)",
+      "see_also": [
+        "torch.nn.init.xavier_normal_",
+        "torch.nn.init.kaiming_normal_"
+      ],
+      "tags": [
+        "initialisation"
+      ]
+    },
+    {
+      "name": "torch.nn.init.zeros_",
+      "aliases": [
+        "nn.init.zeros_",
+        "init.zeros_"
+      ],
+      "kind": "function",
+      "module": "torch.nn.init",
+      "summary": "Fills a tensor with 0 in place.",
+      "signature": "torch.nn.init.zeros_(tensor)",
+      "returns": "The tensor.",
+      "example": "nn.init.zeros_(m.bias)",
+      "see_also": [
+        "torch.nn.init.ones_"
+      ],
+      "tags": [
+        "initialisation"
+      ]
+    },
+    {
+      "name": "torch.nn.utils.clip_grad_norm_",
+      "aliases": [
+        "nn.utils.clip_grad_norm_",
+        "clip_grad_norm_"
+      ],
+      "kind": "function",
+      "module": "torch.nn.utils",
+      "summary": "Rescales gradients in place so their global L2 norm is at most max_norm; returns the norm measured BEFORE clipping.",
+      "signature": "torch.nn.utils.clip_grad_norm_(parameters, max_norm, norm_type=2.0)",
+      "parameters": [
+        {
+          "name": "parameters",
+          "type": "iterable",
+          "description": "e.g. model.parameters()."
+        },
+        {
+          "name": "max_norm",
+          "type": "float",
+          "description": "Maximum allowed total norm."
+        }
+      ],
+      "returns": "Total gradient norm (0-dim Tensor).",
+      "example": "loss.backward()\ngrad_norm = nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)\noptimizer.step()",
+      "notes": [
+        "Call after backward() and before step()."
+      ],
+      "see_also": [
+        "torch.Tensor.backward",
+        "torch.optim.Optimizer.step"
+      ],
+      "tags": [
+        "training",
+        "stability"
+      ]
+    },
+    {
+      "name": "torch.no_grad",
+      "aliases": [
+        "no_grad",
+        "with torch.no_grad()"
+      ],
+      "kind": "context_manager",
+      "module": "torch",
+      "signature": "with torch.no_grad(): ...",
+      "summary": "Disables gradient tracking inside the block. Saves memory and time during inference.",
+      "example": "with torch.no_grad():\n    preds = model(x)",
+      "notes": [
+        "Does NOT change layer behaviour (dropout, batch-norm); use model.eval() for that."
+      ],
+      "see_also": [
+        "torch.nn.Module.eval"
+      ],
+      "tags": [
+        "autograd",
+        "evaluation"
+      ]
+    },
+    {
+      "name": "torch.ones",
+      "aliases": [
+        "ones"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Tensor filled with 1. Default dtype is float32 unless dtype is given.",
+      "signature": "torch.ones(*size, dtype=None, device=None, requires_grad=False)",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int...",
+          "description": "Shape, as separate ints or one tuple."
+        }
+      ],
+      "returns": "A new Tensor.",
+      "example": "torch.ones(2, 3)",
+      "notes": [
+        "Create on the right device: dtype=x.dtype, device=x.device (or use x.new_zeros)."
+      ],
+      "see_also": [
+        "torch.ones_like"
+      ],
+      "tags": [
+        "creation"
+      ]
+    },
+    {
+      "name": "torch.ones_like",
+      "aliases": [
+        "ones_like"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Tensor of ones with the same shape, dtype and device as the input (dtype can be overridden).",
+      "signature": "torch.ones_like(input, *, dtype=None)",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "Tensor",
+          "description": "Template tensor."
+        },
+        {
+          "name": "dtype",
+          "type": "torch.dtype",
+          "default": "None",
+          "description": "Override, e.g. torch.bool for an all-True mask."
+        }
+      ],
+      "returns": "A new Tensor of ones.",
+      "example": "mask = torch.ones_like(mask, dtype=torch.bool)",
+      "see_also": [
+        "torch.zeros_like"
+      ],
+      "tags": [
+        "creation",
+        "masking"
+      ]
+    },
+    {
+      "name": "torch.optim.Adam",
+      "aliases": [
+        "optim.Adam",
+        "Adam"
+      ],
+      "kind": "class",
+      "module": "torch.optim",
+      "summary": "Adam optimiser: per-parameter adaptive step sizes from running estimates of the gradient's first and second moments. weight_decay is classic L2.",
+      "signature": "torch.optim.Adam(params, lr=1e-3, betas=(0.9, 0.999), eps=1e-8, weight_decay=0)",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "iterable | list[dict]",
+          "description": "Parameters or parameter-group dicts."
+        },
+        {
+          "name": "lr",
+          "type": "float",
+          "default": "1e-3",
+          "description": "Learning rate."
+        }
+      ],
+      "example": "opt = optim.Adam(model.parameters(), lr=3e-4)",
+      "see_also": [
+        "torch.optim.AdamW",
+        "torch.optim.SGD"
+      ],
+      "tags": [
+        "optimizer"
+      ]
+    },
+    {
+      "name": "torch.optim.AdamW",
+      "aliases": [
+        "optim.AdamW",
+        "AdamW"
+      ],
+      "kind": "class",
+      "module": "torch.optim",
+      "summary": "Adam with DECOUPLED weight decay (applied directly to the weights, not through the gradient).",
+      "signature": "torch.optim.AdamW(params, lr=1e-3, betas=(0.9, 0.999), eps=1e-8, weight_decay=1e-2)",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "iterable | list[dict]",
+          "description": "Parameters or groups such as [{'params': decay, 'weight_decay': 0.01}, {'params': other, 'weight_decay': 0.0}]."
+        },
+        {
+          "name": "weight_decay",
+          "type": "float",
+          "default": "1e-2",
+          "description": "Decoupled decay."
+        }
+      ],
+      "example": "opt = torch.optim.AdamW([{'params': decay, 'weight_decay': 0.01}, {'params': other, 'weight_decay': 0.0}], lr=2e-3)",
+      "notes": [
+        "Normally exclude biases and norm parameters from weight decay."
+      ],
+      "see_also": [
+        "torch.optim.Adam"
+      ],
+      "tags": [
+        "optimizer"
+      ]
+    },
+    {
+      "name": "torch.optim.Optimizer.step",
+      "aliases": [
+        "optimizer.step",
+        "step"
+      ],
+      "kind": "method",
+      "module": "torch.optim",
+      "signature": "Optimizer.step(closure=None)",
+      "summary": "Performs one parameter update using the gradients currently stored in .grad.",
+      "notes": [
+        "Call after loss.backward()."
+      ],
+      "tags": [
+        "optimizer",
+        "training-loop"
+      ]
+    },
+    {
+      "name": "torch.optim.Optimizer.zero_grad",
+      "aliases": [
+        "optimizer.zero_grad",
+        "zero_grad"
+      ],
+      "kind": "method",
+      "module": "torch.optim",
+      "signature": "Optimizer.zero_grad(set_to_none=True)",
+      "summary": "Resets the gradients of all tensors the optimizer manages.",
+      "parameters": [
+        {
+          "name": "set_to_none",
+          "type": "bool",
+          "default": "True",
+          "description": "Set .grad to None instead of filling with zeros (faster, less memory)."
+        }
+      ],
+      "notes": [
+        "Gradients ACCUMULATE across backward() calls; call this once per step, before backward()."
+      ],
+      "see_also": [
+        "torch.Tensor.backward"
+      ],
+      "tags": [
+        "optimizer",
+        "training-loop"
+      ]
+    },
+    {
+      "name": "torch.optim.SGD",
+      "aliases": [
+        "optim.SGD",
+        "SGD"
+      ],
+      "kind": "class",
+      "module": "torch.optim",
+      "signature": "torch.optim.SGD(params, lr=0.001, momentum=0, dampening=0, weight_decay=0, nesterov=False)",
+      "summary": "Stochastic gradient descent optimizer, optionally with momentum.",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "iterable",
+          "description": "Tensors to optimise, typically model.parameters()."
+        },
+        {
+          "name": "lr",
+          "type": "float",
+          "default": "0.001",
+          "description": "Learning rate."
+        },
+        {
+          "name": "momentum",
+          "type": "float",
+          "default": "0",
+          "description": "Momentum factor."
+        }
+      ],
+      "example": "optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)",
+      "see_also": [
+        "torch.optim.Optimizer.zero_grad",
+        "torch.optim.Optimizer.step"
+      ],
+      "tags": [
+        "optimizer"
+      ]
+    },
+    {
+      "name": "torch.optim.lr_scheduler.CosineAnnealingLR",
+      "aliases": [
+        "lr_scheduler.CosineAnnealingLR",
+        "optim.lr_scheduler.CosineAnnealingLR",
+        "CosineAnnealingLR"
+      ],
+      "kind": "class",
+      "module": "torch.optim.lr_scheduler",
+      "summary": "Anneals the learning rate from its initial value to eta_min along half a cosine over T_max steps.",
+      "signature": "torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max, eta_min=0.0)",
+      "parameters": [
+        {
+          "name": "T_max",
+          "type": "int",
+          "description": "Number of scheduler steps for the half-cosine, e.g. the number of epochs."
+        },
+        {
+          "name": "eta_min",
+          "type": "float",
+          "default": "0.0",
+          "description": "Minimum LR."
+        }
+      ],
+      "example": "sched = optim.lr_scheduler.CosineAnnealingLR(opt, T_max=epochs)\nfor epoch in range(epochs):\n    train(...); sched.step()",
+      "notes": [
+        "Call scheduler.step() once per period (epoch here), AFTER optimizer.step()."
+      ],
+      "see_also": [
+        "torch.optim.lr_scheduler.LRScheduler.step"
+      ],
+      "tags": [
+        "scheduler"
+      ]
+    },
+    {
+      "name": "torch.optim.lr_scheduler.LRScheduler.get_last_lr",
+      "aliases": [
+        "scheduler.get_last_lr",
+        "get_last_lr"
+      ],
+      "kind": "method",
+      "module": "torch.optim.lr_scheduler.LRScheduler",
+      "summary": "List with the most recently computed learning rate of each parameter group.",
+      "signature": "scheduler.get_last_lr()",
+      "returns": "list[float].",
+      "example": "current_lr = scheduler.get_last_lr()[0]",
+      "notes": [
+        "Read it BEFORE scheduler.step() to log the LR actually used in this epoch."
+      ],
+      "see_also": [
+        "torch.optim.lr_scheduler.LRScheduler.step"
+      ],
+      "tags": [
+        "scheduler"
+      ]
+    },
+    {
+      "name": "torch.optim.lr_scheduler.LRScheduler.step",
+      "aliases": [
+        "scheduler.step",
+        "step"
+      ],
+      "kind": "method",
+      "module": "torch.optim.lr_scheduler.LRScheduler",
+      "summary": "Advances the schedule by one step and updates the optimiser's learning rates.",
+      "signature": "scheduler.step()",
+      "example": "scheduler.step()",
+      "notes": [
+        "Per epoch or per batch depending on how the schedule was defined."
+      ],
+      "see_also": [
+        "torch.optim.lr_scheduler.LRScheduler.get_last_lr"
+      ],
+      "tags": [
+        "scheduler"
+      ]
+    },
+    {
+      "name": "torch.optim.lr_scheduler.LambdaLR",
+      "aliases": [
+        "lr_scheduler.LambdaLR",
+        "optim.lr_scheduler.LambdaLR",
+        "LambdaLR"
+      ],
+      "kind": "class",
+      "module": "torch.optim.lr_scheduler",
+      "summary": "Sets lr = base_lr * lr_lambda(step), for fully custom schedules such as warm-up + cosine.",
+      "signature": "torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)",
+      "parameters": [
+        {
+          "name": "lr_lambda",
+          "type": "callable",
+          "description": "Function of the step index returning a multiplier."
+        }
+      ],
+      "example": "sched = LambdaLR(opt, lambda s: min(1.0, (s + 1) / warmup))",
+      "see_also": [
+        "torch.optim.lr_scheduler.CosineAnnealingLR"
+      ],
+      "tags": [
+        "scheduler"
+      ]
+    },
+    {
+      "name": "torch.outer",
+      "aliases": [
+        "outer"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Outer product of two 1-D tensors: out[i, j] = a[i] * b[j].",
+      "signature": "torch.outer(input, vec2)",
+      "returns": "(len(a), len(b)) Tensor.",
+      "example": "angles = torch.outer(positions, frequencies)",
+      "notes": [
+        "Alias: torch.ger."
+      ],
+      "see_also": [
+        "torch.matmul"
+      ],
+      "tags": [
+        "linear-algebra"
+      ]
+    },
+    {
+      "name": "torch.rand",
+      "aliases": [
+        "rand"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Tensor with values drawn uniformly from [0, 1).",
+      "signature": "torch.rand(*size, generator=None, dtype=None, device=None)",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int...",
+          "description": "Shape."
+        }
+      ],
+      "returns": "A new Tensor.",
+      "example": "torch.rand(()).item() < 0.5",
+      "see_also": [
+        "torch.randn"
+      ],
+      "tags": [
+        "random"
+      ]
+    },
+    {
+      "name": "torch.randint",
+      "aliases": [
+        "randint"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Integer tensor with values drawn uniformly from [low, high).",
+      "signature": "torch.randint(low=0, high, size, *, generator=None)",
+      "parameters": [
+        {
+          "name": "low",
+          "type": "int",
+          "default": "0",
+          "description": "Inclusive lower bound."
+        },
+        {
+          "name": "high",
+          "type": "int",
+          "description": "EXCLUSIVE upper bound."
+        },
+        {
+          "name": "size",
+          "type": "tuple",
+          "description": "Shape."
+        }
+      ],
+      "returns": "int64 Tensor.",
+      "example": "labels = torch.randint(0, 10, (8,))",
+      "see_also": [
+        "torch.randperm"
+      ],
+      "tags": [
+        "random"
+      ]
+    },
+    {
+      "name": "torch.randn",
+      "aliases": [
+        "randn"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Tensor with values drawn from the standard normal distribution N(0, 1).",
+      "signature": "torch.randn(*size, generator=None, dtype=None, device=None)",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int...",
+          "description": "Shape."
+        },
+        {
+          "name": "dtype",
+          "type": "torch.dtype",
+          "default": "None",
+          "description": "e.g. torch.float64 for numerical checks."
+        }
+      ],
+      "returns": "A new Tensor.",
+      "example": "x = torch.randn(4, 3, 32, 32)  # fake image batch",
+      "notes": [
+        "Seed with torch.manual_seed for reproducibility."
+      ],
+      "see_also": [
+        "torch.manual_seed",
+        "torch.rand"
+      ],
+      "tags": [
+        "random",
+        "creation"
+      ]
+    },
+    {
+      "name": "torch.randn_like",
+      "aliases": [
+        "randn_like"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Standard-normal tensor with the shape/dtype/device of the input.",
+      "signature": "torch.randn_like(input)",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "Tensor",
+          "description": "Template tensor."
+        }
+      ],
+      "returns": "A new Tensor.",
+      "example": "noise = torch.randn_like(x)",
+      "see_also": [
+        "torch.randn"
+      ],
+      "tags": [
+        "random"
+      ]
+    },
+    {
+      "name": "torch.randperm",
+      "aliases": [
+        "randperm"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Random permutation of the integers 0 .. n-1.",
+      "signature": "torch.randperm(n, *, generator=None, dtype=torch.int64)",
+      "parameters": [
+        {
+          "name": "n",
+          "type": "int",
+          "description": "Number of elements."
+        },
+        {
+          "name": "generator",
+          "type": "torch.Generator",
+          "default": "None",
+          "description": "Seeded generator for a reproducible shuffle."
+        }
+      ],
+      "returns": "1-D int64 Tensor.",
+      "example": "g = torch.Generator().manual_seed(42)\nperm = torch.randperm(5000, generator=g)\ntrain_idx, val_idx = perm[:4500].tolist(), perm[4500:].tolist()",
+      "notes": [
+        "Indices only: slice it to split a dataset without reordering the data."
+      ],
+      "see_also": [
+        "torch.Generator",
+        "torch.utils.data.Subset"
+      ],
+      "tags": [
+        "random",
+        "split"
+      ]
+    },
+    {
+      "name": "torch.rsqrt",
+      "aliases": [
+        "rsqrt"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Element-wise 1/sqrt(x).",
+      "signature": "torch.rsqrt(input)",
+      "returns": "Tensor of the same shape.",
+      "example": "x * torch.rsqrt(ms + eps)",
+      "tags": [
+        "math"
+      ]
+    },
+    {
+      "name": "torch.save",
+      "aliases": [
+        "save"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Serialises an object (state_dict, checkpoint dict, tensors) to disk.",
+      "signature": "torch.save(obj, f)",
+      "parameters": [
+        {
+          "name": "obj",
+          "description": "Object to save."
+        },
+        {
+          "name": "f",
+          "type": "str | Path",
+          "description": "Destination."
+        }
+      ],
+      "example": "torch.save({'model_state': best_state, 'best_val_acc': acc}, path)",
+      "notes": [
+        "Save model.state_dict() rather than the whole module."
+      ],
+      "see_also": [
+        "torch.load",
+        "torch.nn.Module.state_dict"
+      ],
+      "tags": [
+        "checkpoint"
+      ]
+    },
+    {
+      "name": "torch.set_num_threads",
+      "aliases": [
+        "set_num_threads"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Sets the number of CPU threads used for intra-op parallelism.",
+      "signature": "torch.set_num_threads(int)",
+      "parameters": [
+        {
+          "name": "int",
+          "type": "int",
+          "description": "Number of threads."
+        }
+      ],
+      "example": "torch.set_num_threads(4)",
+      "see_also": [
+        "torch.get_num_threads"
+      ],
+      "tags": [
+        "cpu"
+      ]
+    },
+    {
+      "name": "torch.sigmoid",
+      "aliases": [
+        "sigmoid"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Logistic function 1 / (1 + e^-x), mapping logits to probabilities in (0, 1).",
+      "signature": "torch.sigmoid(input)",
+      "returns": "Tensor in (0, 1).",
+      "example": "p = torch.sigmoid(logit)",
+      "notes": [
+        "Do NOT apply it before binary_cross_entropy_with_logits (that loss applies it internally)."
+      ],
+      "see_also": [
+        "torch.nn.functional.binary_cross_entropy_with_logits"
+      ],
+      "tags": [
+        "activation"
+      ]
+    },
+    {
+      "name": "torch.sin",
+      "aliases": [
+        "sin"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Element-wise sine (radians).",
+      "signature": "torch.sin(input)",
+      "returns": "Tensor of the same shape.",
+      "example": "torch.sin(angles)",
+      "tags": [
+        "math"
+      ]
+    },
+    {
+      "name": "torch.softmax",
+      "aliases": [
+        "Tensor.softmax",
+        "x.softmax",
+        ".softmax"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Softmax over a dimension: exp(x_i) / sum_j exp(x_j).",
+      "signature": "torch.softmax(input, dim)",
+      "parameters": [
+        {
+          "name": "dim",
+          "type": "int",
+          "description": "Dimension that sums to 1."
+        }
+      ],
+      "returns": "Tensor of probabilities.",
+      "example": "attn = torch.softmax(scores, dim=-1)",
+      "notes": [
+        "Don't apply before CrossEntropyLoss / F.cross_entropy - they expect raw logits."
+      ],
+      "see_also": [
+        "torch.nn.functional.softmax",
+        "torch.nn.functional.log_softmax"
+      ],
+      "tags": [
+        "activation"
+      ]
+    },
+    {
+      "name": "torch.split",
+      "aliases": [
+        "Tensor.split",
+        "x.split",
+        ".split"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Splits a tensor into chunks of a given SIZE (or list of sizes) along a dimension.",
+      "signature": "torch.split(tensor, split_size_or_sections, dim=0)",
+      "parameters": [
+        {
+          "name": "split_size_or_sections",
+          "type": "int | list[int]",
+          "description": "Size of each chunk, or explicit sizes."
+        },
+        {
+          "name": "dim",
+          "type": "int",
+          "default": "0",
+          "description": "Dimension to split."
+        }
+      ],
+      "returns": "Tuple of views.",
+      "example": "q, k, v = qkv.split(D, dim=-1)  # three (N, P, D) pieces from (N, P, 3D)",
+      "notes": [
+        "split takes the chunk SIZE, chunk takes the NUMBER of chunks."
+      ],
+      "see_also": [
+        "torch.Tensor.chunk"
+      ],
+      "tags": [
+        "shapes",
+        "attention"
+      ]
+    },
+    {
+      "name": "torch.sqrt",
+      "aliases": [
+        "sqrt"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Element-wise square root.",
+      "signature": "torch.sqrt(input)",
+      "returns": "Tensor of the same shape.",
+      "example": "torch.sqrt(var)",
+      "tags": [
+        "math"
+      ]
+    },
+    {
+      "name": "torch.square",
+      "aliases": [
+        "square"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Element-wise x**2.",
+      "signature": "torch.square(input)",
+      "returns": "Tensor of the same shape.",
+      "example": "torch.square(A).sum(dim=1)",
+      "tags": [
+        "math"
+      ]
+    },
+    {
+      "name": "torch.stack",
+      "aliases": [
+        "stack"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Joins tensors along a NEW dimension (all inputs must have identical shapes).",
+      "signature": "torch.stack(tensors, dim=0)",
+      "parameters": [
+        {
+          "name": "tensors",
+          "type": "sequence of Tensor",
+          "description": "Same-shape tensors."
+        },
+        {
+          "name": "dim",
+          "type": "int",
+          "default": "0",
+          "description": "Position of the new dimension."
+        }
+      ],
+      "returns": "A new Tensor with one more dimension.",
+      "example": "torch.stack([torch.zeros(3), torch.ones(3)])  # (2, 3)",
+      "see_also": [
+        "torch.cat"
+      ],
+      "tags": [
+        "shapes"
+      ]
+    },
+    {
+      "name": "torch.tensor",
+      "aliases": [
+        "tensor"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Builds a new tensor by COPYING data (list, scalar, NumPy array, ...). The dtype is inferred unless given.",
+      "signature": "torch.tensor(data, *, dtype=None, device=None, requires_grad=False)",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "list | scalar | ndarray | Tensor",
+          "description": "Initial values."
+        },
+        {
+          "name": "dtype",
+          "type": "torch.dtype",
+          "default": "None",
+          "description": "Force a dtype, e.g. torch.float32. Default: inferred (Python floats -> float32, ints -> int64)."
+        },
+        {
+          "name": "device",
+          "type": "torch.device",
+          "default": "None",
+          "description": "Where to allocate the tensor."
+        },
+        {
+          "name": "requires_grad",
+          "type": "bool",
+          "default": "False",
+          "description": "Track operations for autograd."
+        }
+      ],
+      "returns": "A new Tensor that does not share memory with data.",
+      "example": "a = np.array([1, 2, 3])\nt = torch.tensor(a, dtype=torch.float32)\na[0] = 99\nprint(t)  # tensor([1., 2., 3.]) - unaffected",
+      "notes": [
+        "Always copies; use torch.from_numpy / torch.as_tensor if you want to share memory.",
+        "torch.tensor(some_tensor) warns - use some_tensor.detach().clone() instead."
+      ],
+      "see_also": [
+        "torch.from_numpy",
+        "torch.as_tensor"
+      ],
+      "tags": [
+        "creation",
+        "dtype",
+        "numpy"
+      ]
+    },
+    {
+      "name": "torch.tensordot",
+      "aliases": [
+        "tensordot"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Contracts the given dimensions of two tensors.",
+      "signature": "torch.tensordot(a, b, dims=2)",
+      "parameters": [
+        {
+          "name": "dims",
+          "type": "int | tuple",
+          "default": "2",
+          "description": "Number of trailing/leading dims, or ([a_dims], [b_dims])."
+        }
+      ],
+      "returns": "Tensor.",
+      "example": "torch.tensordot(x, w, dims=([1], [0]))",
+      "see_also": [
+        "torch.einsum"
+      ],
+      "tags": [
+        "linear-algebra"
+      ]
+    },
+    {
+      "name": "torch.testing.assert_close",
+      "aliases": [
+        "assert_close"
+      ],
+      "kind": "function",
+      "module": "torch.testing",
+      "summary": "Raises with a detailed message unless two tensors match in shape, dtype, device and values (within tolerance).",
+      "signature": "torch.testing.assert_close(actual, expected, *, rtol=None, atol=None)",
+      "example": "torch.testing.assert_close(my_out, F.conv2d(x, w), atol=1e-5, rtol=1e-5)",
+      "see_also": [
+        "torch.allclose"
+      ],
+      "tags": [
+        "testing"
+      ]
+    },
+    {
+      "name": "torch.topk",
+      "aliases": [
+        "Tensor.topk",
+        "x.topk",
+        ".topk",
+        "topk"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "The k largest entries along a dimension, sorted from largest to smallest.",
+      "signature": "torch.topk(input, k, dim=-1, largest=True, sorted=True)",
+      "parameters": [
+        {
+          "name": "k",
+          "type": "int",
+          "description": "How many entries."
+        },
+        {
+          "name": "dim",
+          "type": "int",
+          "default": "-1",
+          "description": "Dimension to search."
+        }
+      ],
+      "returns": "Named tuple (values, indices).",
+      "example": "values, indices = logits.topk(5, dim=-1)",
+      "see_also": [
+        "torch.Tensor.argmax"
+      ],
+      "tags": [
+        "sorting"
+      ]
+    },
+    {
+      "name": "torch.uint8",
+      "aliases": [
+        "uint8"
+      ],
+      "kind": "attribute",
+      "module": "torch",
+      "summary": "Unsigned 8-bit integer dtype (raw image bytes).",
+      "example": "raw = torch.from_numpy(arr_uint8)",
+      "notes": [
+        "Integer division/overflow traps: convert to float before scaling to [0, 1]."
+      ],
+      "tags": [
+        "dtype"
+      ]
+    },
+    {
+      "name": "torch.utils.data.DataLoader",
+      "aliases": [
+        "data.DataLoader",
+        "DataLoader"
+      ],
+      "kind": "class",
+      "module": "torch.utils.data",
+      "summary": "Iterates a dataset in (optionally shuffled) mini-batches, optionally with worker processes.",
+      "signature": "torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=False, num_workers=0, collate_fn=None, pin_memory=False, generator=None)",
+      "parameters": [
+        {
+          "name": "shuffle",
+          "type": "bool",
+          "default": "False",
+          "description": "True for training, False for validation/test."
+        },
+        {
+          "name": "collate_fn",
+          "type": "callable",
+          "default": "None",
+          "description": "Builds a batch from a list of samples, e.g. to pad sequences."
+        },
+        {
+          "name": "generator",
+          "type": "torch.Generator",
+          "default": "None",
+          "description": "Seeded generator for reproducible shuffling."
+        }
+      ],
+      "returns": "An iterable of batches.",
+      "example": "loader = DataLoader(train_ds, batch_size=128, shuffle=True, num_workers=2, pin_memory=torch.cuda.is_available())",
+      "notes": [
+        "The last batch can be smaller - weight metrics by the actual batch size."
+      ],
+      "see_also": [
+        "torch.utils.data.Dataset",
+        "torch.utils.data.Subset"
+      ],
+      "tags": [
+        "data"
+      ]
+    },
+    {
+      "name": "torch.utils.data.Dataset",
+      "aliases": [
+        "data.Dataset",
+        "Dataset"
+      ],
+      "kind": "class",
+      "module": "torch.utils.data",
+      "summary": "Abstract map-style dataset: implement __len__ and __getitem__.",
+      "signature": "class MyData(Dataset): def __len__(self): ...; def __getitem__(self, i): ...",
+      "example": "class Reviews(Dataset):\n    def __len__(self): return len(self.ids)\n    def __getitem__(self, i): return {'ids': self.ids[i], 'label': self.labels[i]}",
+      "see_also": [
+        "torch.utils.data.DataLoader"
+      ],
+      "tags": [
+        "data"
+      ]
+    },
+    {
+      "name": "torch.utils.data.Subset",
+      "aliases": [
+        "data.Subset",
+        "Subset"
+      ],
+      "kind": "class",
+      "module": "torch.utils.data",
+      "summary": "View of a dataset restricted to the given indices.",
+      "signature": "torch.utils.data.Subset(dataset, indices)",
+      "parameters": [
+        {
+          "name": "indices",
+          "type": "sequence[int]",
+          "description": "Positions to keep."
+        }
+      ],
+      "example": "train_ds = Subset(train_base, train_indices)",
+      "notes": [
+        "Build two base datasets with different transforms (train/eval) and wrap each in a Subset with disjoint indices."
+      ],
+      "see_also": [
+        "torch.randperm"
+      ],
+      "tags": [
+        "data",
+        "split"
+      ]
+    },
+    {
+      "name": "torch.where",
+      "aliases": [
+        "where"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Element-wise choice: takes values from x where condition is True and from y elsewhere.",
+      "signature": "torch.where(condition, input, other)",
+      "parameters": [
+        {
+          "name": "condition",
+          "type": "BoolTensor",
+          "description": "Selector, broadcast against the others."
+        },
+        {
+          "name": "input",
+          "type": "Tensor | scalar",
+          "description": "Used where condition is True."
+        },
+        {
+          "name": "other",
+          "type": "Tensor | scalar",
+          "description": "Used where it is False."
+        }
+      ],
+      "returns": "A new Tensor.",
+      "example": "x_clean = torch.where(mask[..., None], x, 0.)",
+      "notes": [
+        "Selects instead of multiplying, so NaN/inf in discarded entries cannot leak (NaN * 0 is NaN)."
+      ],
+      "see_also": [
+        "torch.Tensor.masked_fill"
+      ],
+      "tags": [
+        "masking"
+      ]
+    },
+    {
+      "name": "torch.zeros",
+      "aliases": [
+        "zeros"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Tensor filled with 0. Default dtype is float32 unless dtype is given.",
+      "signature": "torch.zeros(*size, dtype=None, device=None, requires_grad=False)",
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int...",
+          "description": "Shape, as separate ints or one tuple."
+        }
+      ],
+      "returns": "A new Tensor.",
+      "example": "torch.zeros(2, 3)",
+      "notes": [
+        "Create on the right device: dtype=x.dtype, device=x.device (or use x.new_zeros)."
+      ],
+      "see_also": [
+        "torch.zeros_like",
+        "torch.Tensor.new_zeros"
+      ],
+      "tags": [
+        "creation"
+      ]
+    },
+    {
+      "name": "torch.zeros_like",
+      "aliases": [
+        "zeros_like"
+      ],
+      "kind": "function",
+      "module": "torch",
+      "summary": "Zero tensor with the same shape, dtype and device as the input.",
+      "signature": "torch.zeros_like(input)",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "Tensor",
+          "description": "Template tensor."
+        }
+      ],
+      "returns": "A new Tensor of zeros.",
+      "example": "mask = torch.zeros_like(x)",
+      "see_also": [
+        "torch.zeros",
+        "torch.ones_like"
+      ],
+      "tags": [
+        "creation"
+      ]
+    },
+    {
+      "name": "torchvision.datasets.OxfordIIITPet",
+      "aliases": [
+        "datasets.OxfordIIITPet",
+        "OxfordIIITPet"
+      ],
+      "kind": "class",
+      "module": "torchvision.datasets",
+      "summary": "Oxford-IIIT Pet dataset (37 breeds) with optional segmentation trimaps.",
+      "signature": "torchvision.datasets.OxfordIIITPet(root, split='trainval', target_types='category', download=False)",
+      "example": "datasets.OxfordIIITPet('data', split='trainval', target_types='segmentation', download=True)",
+      "tags": [
+        "data",
+        "segmentation"
+      ]
+    },
+    {
+      "name": "torchvision.datasets.STL10",
+      "aliases": [
+        "datasets.STL10",
+        "STL10"
+      ],
+      "kind": "class",
+      "module": "torchvision.datasets",
+      "summary": "STL-10 dataset of 96x96 colour images in 10 classes (5,000 labelled train, 8,000 test).",
+      "signature": "torchvision.datasets.STL10(root, split='train', transform=None, download=False)",
+      "example": "ds = datasets.STL10('./data', split='train', download=True, transform=T.ToTensor())",
+      "see_also": [
+        "torch.utils.data.Subset"
+      ],
+      "tags": [
+        "data"
+      ]
+    },
+    {
+      "name": "torchvision.models.ResNet18_Weights",
+      "aliases": [
+        "models.ResNet18_Weights",
+        "ResNet18_Weights"
+      ],
+      "kind": "class",
+      "module": "torchvision.models",
+      "summary": "Enum of available pretrained weights for resnet18; IMAGENET1K_V1 is the classic ImageNet checkpoint.",
+      "signature": "torchvision.models.ResNet18_Weights.IMAGENET1K_V1",
+      "example": "w = torchvision.models.ResNet18_Weights.IMAGENET1K_V1\nmodel = torchvision.models.resnet18(weights=w)",
+      "see_also": [
+        "torchvision.models.resnet18"
+      ],
+      "tags": [
+        "models",
+        "pretrained"
+      ]
+    },
+    {
+      "name": "torchvision.models.resnet18",
+      "aliases": [
+        "models.resnet18",
+        "resnet18"
+      ],
+      "kind": "function",
+      "module": "torchvision.models",
+      "summary": "ResNet-18 architecture, optionally with pretrained ImageNet weights.",
+      "signature": "torchvision.models.resnet18(weights=None)",
+      "parameters": [
+        {
+          "name": "weights",
+          "type": "ResNet18_Weights | None",
+          "default": "None",
+          "description": "e.g. ResNet18_Weights.IMAGENET1K_V1; None gives random init."
+        }
+      ],
+      "returns": "A torch.nn.Module with conv1, bn1, relu, maxpool, layer1-4, avgpool, fc.",
+      "example": "backbone = torchvision.models.resnet18(weights=None)\nstem = nn.Sequential(backbone.conv1, backbone.bn1, backbone.relu)",
+      "notes": [
+        "The stages' strides: stem /2, pool /4, layer2 /8, layer3 /16, layer4 /32."
+      ],
+      "see_also": [
+        "torchvision.models.ResNet18_Weights"
+      ],
+      "tags": [
+        "models",
+        "pretrained"
+      ]
+    },
+    {
+      "name": "torchvision.transforms.Compose",
+      "aliases": [
+        "T.Compose",
+        "transforms.Compose",
+        "Compose"
+      ],
+      "kind": "class",
+      "module": "torchvision.transforms",
+      "summary": "Chains transforms in the order given.",
+      "signature": "torchvision.transforms.Compose(transforms)",
+      "example": "T.Compose([T.RandomCrop(96, padding=4), T.RandomHorizontalFlip(), T.ToTensor(), T.Normalize(mean, std)])",
+      "notes": [
+        "Order matters: PIL-only transforms before ToTensor, Normalize after it."
+      ],
+      "see_also": [
+        "torchvision.transforms.ToTensor",
+        "torchvision.transforms.Normalize"
+      ],
+      "tags": [
+        "transforms"
+      ]
+    },
+    {
+      "name": "torchvision.transforms.Normalize",
+      "aliases": [
+        "T.Normalize",
+        "transforms.Normalize",
+        "Normalize"
+      ],
+      "kind": "class",
+      "module": "torchvision.transforms",
+      "summary": "Per-channel standardisation of a TENSOR image: (x - mean) / std.",
+      "signature": "torchvision.transforms.Normalize(mean, std)",
+      "parameters": [
+        {
+          "name": "mean",
+          "type": "sequence",
+          "description": "One value per channel."
+        },
+        {
+          "name": "std",
+          "type": "sequence",
+          "description": "One value per channel."
+        }
+      ],
+      "example": "T.Normalize(mean=[0.43, 0.42, 0.39], std=[0.27, 0.26, 0.27])",
+      "notes": [
+        "Must come after ToTensor; to visualise, invert with x * std + mean."
+      ],
+      "see_also": [
+        "torchvision.transforms.ToTensor"
+      ],
+      "tags": [
+        "transforms"
+      ]
+    },
+    {
+      "name": "torchvision.transforms.RandomCrop",
+      "aliases": [
+        "T.RandomCrop",
+        "transforms.RandomCrop",
+        "RandomCrop"
+      ],
+      "kind": "class",
+      "module": "torchvision.transforms",
+      "summary": "Crops a random window; with padding it first pads the image (padding_mode='reflect' mirrors the border).",
+      "signature": "torchvision.transforms.RandomCrop(size, padding=None, padding_mode='constant')",
+      "example": "T.RandomCrop(96, padding=4, padding_mode='reflect')",
+      "notes": [
+        "Training-time augmentation only."
+      ],
+      "tags": [
+        "transforms",
+        "augmentation"
+      ]
+    },
+    {
+      "name": "torchvision.transforms.RandomHorizontalFlip",
+      "aliases": [
+        "T.RandomHorizontalFlip",
+        "transforms.RandomHorizontalFlip",
+        "RandomHorizontalFlip"
+      ],
+      "kind": "class",
+      "module": "torchvision.transforms",
+      "summary": "Flips the image left-right with probability p.",
+      "signature": "torchvision.transforms.RandomHorizontalFlip(p=0.5)",
+      "example": "T.RandomHorizontalFlip(p=0.5)",
+      "notes": [
+        "Training-time augmentation only."
+      ],
+      "tags": [
+        "transforms",
+        "augmentation"
+      ]
+    },
+    {
+      "name": "torchvision.transforms.ToTensor",
+      "aliases": [
+        "T.ToTensor",
+        "transforms.ToTensor",
+        "ToTensor"
+      ],
+      "kind": "class",
+      "module": "torchvision.transforms",
+      "summary": "Converts a PIL image / HWC uint8 array into a CHW float32 tensor scaled to [0, 1].",
+      "signature": "torchvision.transforms.ToTensor()",
+      "example": "T.ToTensor()(pil_image).shape  # (3, H, W)",
+      "see_also": [
+        "torchvision.transforms.Normalize"
+      ],
+      "tags": [
+        "transforms"
+      ]
+    },
+    {
+      "name": "torchvision.utils.make_grid",
+      "aliases": [
+        "utils.make_grid",
+        "make_grid"
+      ],
+      "kind": "function",
+      "module": "torchvision.utils",
+      "summary": "Tiles a batch of images (N, C, H, W) into one image grid.",
+      "signature": "torchvision.utils.make_grid(tensor, nrow=8, padding=2, normalize=False)",
+      "parameters": [
+        {
+          "name": "nrow",
+          "type": "int",
+          "default": "8",
+          "description": "Images per row."
+        }
+      ],
+      "returns": "Tensor (C, H', W').",
+      "example": "grid = make_grid(images[:8], nrow=4)\nplt.imshow(grid.permute(1, 2, 0))",
+      "notes": [
+        "Un-normalise (x*std + mean) before showing normalised images."
+      ],
+      "tags": [
+        "visualisation"
+      ]
     }
   ]
 }
