@@ -8,11 +8,13 @@ interface Props {
   onGraded: (correct: boolean) => void
   onNext: () => void
   onOpenReference: (name: string) => void
+  /** Show the per-blank placeholder text (a hint). Defaults to true. */
+  showPlaceholders?: boolean
 }
 
 const TYPE_LABEL = { fill_blank: 'Fill in the blanks', find_fix: 'Identify & correct' } as const
 
-export function QuestionView({ q, onGraded, onNext, onOpenReference }: Props) {
+export function QuestionView({ q, onGraded, onNext, onOpenReference, showPlaceholders = true }: Props) {
   return (
     <article className="question">
       <header className="q-header">
@@ -44,7 +46,7 @@ export function QuestionView({ q, onGraded, onNext, onOpenReference }: Props) {
       <Hints hints={q.hints} />
 
       {q.type === 'fill_blank' ? (
-        <FillBlank q={q} onGraded={onGraded} onNext={onNext} />
+        <FillBlank q={q} onGraded={onGraded} onNext={onNext} showPlaceholders={showPlaceholders} />
       ) : (
         <FindFix q={q} onGraded={onGraded} onNext={onNext} />
       )}

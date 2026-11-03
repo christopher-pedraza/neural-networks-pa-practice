@@ -6,6 +6,16 @@ import { QuestionView } from './components/QuestionView'
 import { ReferencePanel } from './components/ReferencePanel'
 
 const STORAGE_KEY = 'pa-practice:categories'
+const PLACEHOLDER_KEY = 'pa-practice:show-placeholders'
+
+/** Per-session (sessionStorage) so it survives a reload but resets in a new tab/session. */
+function loadShowPlaceholders(): boolean {
+  try {
+    return sessionStorage.getItem(PLACEHOLDER_KEY) !== 'false'
+  } catch {
+    return true
+  }
+}
 
 function loadSavedCategories(available: string[]): Set<string> {
   try {
@@ -58,6 +68,15 @@ function Practice({ data }: { data: LoadedData }) {
     [],
   )
 
+  const [showPlaceholders, setShowPlaceholders] = useState(loadShowPlaceholders)
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(PLACEHOLDER_KEY, String(showPlaceholders))
+    } catch {
+      /* storage unavailable: the toggle still works for this page load */
+    }
+  }, [showPlaceholders])
+
   const [refOpen, setRefOpen] = useState(false)
   const [refRequest, setRefRequest] = useState<{ name: string; nonce: number } | null>(null)
   const openReference = useCallback((name: string) => {
@@ -73,6 +92,14 @@ function Practice({ data }: { data: LoadedData }) {
           <span className="stats" title="Questions answered correctly on the first check">
             First-try correct: <strong>{stats.firstTry}</strong> / {stats.attempted}
           </span>
+          <label className="toggle" title="Placeholders under each blank are hints; hide them to practise from memory">
+            <input
+              type="checkbox"
+              checked={showPlaceholders}
+              onChange={(e) => setShowPlaceholders(e.target.checked)}
+            />
+            Blank placeholders
+          </label>
           <button type="button" className={`btn ${refOpen ? 'primary' : ''}`} onClick={() => {
               if (!refOpen) setRefRequest(null)
               setRefOpen(!refOpen)
@@ -93,6 +120,7 @@ function Practice({ data }: { data: LoadedData }) {
             onGraded={onGraded}
             onNext={next}
             onOpenReference={openReference}
+            showPlaceholders={showPlaceholders}
           />
         ) : (
           <div className="status">

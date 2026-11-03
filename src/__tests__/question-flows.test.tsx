@@ -69,6 +69,28 @@ describe('fill_blank', () => {
   })
 })
 
+describe('placeholders toggle', () => {
+  const placeholders = (id: string) =>
+    get(id).type === 'fill_blank' ? (get(id) as { blanks: { placeholder?: string }[] }).blanks.map((b) => b.placeholder) : []
+
+  it('shows blank placeholders by default and hides them when turned off', () => {
+    const id = 'lin-reg-setup-01'
+    const expected = placeholders(id).filter(Boolean) as string[]
+    expect(expected.length).toBeGreaterThan(0)
+
+    const { unmount } = render(
+      <QuestionView q={get(id)} onGraded={vi.fn()} onNext={vi.fn()} onOpenReference={vi.fn()} />,
+    )
+    for (const p of expected) expect(screen.getAllByPlaceholderText(p).length).toBeGreaterThan(0)
+    unmount()
+
+    render(
+      <QuestionView q={get(id)} onGraded={vi.fn()} onNext={vi.fn()} onOpenReference={vi.fn()} showPlaceholders={false} />,
+    )
+    for (const p of expected) expect(screen.queryByPlaceholderText(p)).toBeNull()
+  })
+})
+
 describe('find_fix', () => {
   it('requires flagging the right lines AND a valid fix; supports multiple valid fixes', async () => {
     const { user, onGraded } = setup('mnist-eval-bugs-01')

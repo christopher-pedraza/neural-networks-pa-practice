@@ -24,9 +24,11 @@ interface Props {
   q: FillBlankQuestion
   onGraded: (correct: boolean) => void
   onNext: () => void
+  /** When false, blank placeholders and answer-length-based widths (both are hints) are hidden. */
+  showPlaceholders?: boolean
 }
 
-export function FillBlank({ q, onGraded, onNext }: Props) {
+export function FillBlank({ q, onGraded, onNext, showPlaceholders = true }: Props) {
   const [values, setValues] = useState<Record<string, string>>({})
   const [checked, setChecked] = useState(false)
   const [revealed, setRevealed] = useState(false)
@@ -63,7 +65,7 @@ export function FillBlank({ q, onGraded, onNext }: Props) {
     const common = {
       className: `blank-input ${state}`,
       value: solved,
-      placeholder: b.placeholder ?? '…',
+      placeholder: showPlaceholders ? (b.placeholder ?? '…') : '…',
       disabled: revealed || (checked && allCorrect),
       spellCheck: false,
       autoComplete: 'off',
@@ -78,7 +80,11 @@ export function FillBlank({ q, onGraded, onNext }: Props) {
         <textarea
           {...common}
           rows={Math.max(2, b.answers[0].split('\n').length)}
-          style={{ width: `${Math.max(24, ...b.answers[0].split('\n').map((l) => l.length + 4))}ch` }}
+          style={{
+            width: showPlaceholders
+              ? `${Math.max(24, ...b.answers[0].split('\n').map((l) => l.length + 4))}ch`
+              : '40ch',
+          }}
         />
       )
     }
@@ -86,7 +92,11 @@ export function FillBlank({ q, onGraded, onNext }: Props) {
       <input
         {...common}
         type="text"
-        style={{ width: `${Math.max(12, b.answers[0].length + 4, (b.placeholder ?? '').length + 2)}ch` }}
+        style={{
+          width: showPlaceholders
+            ? `${Math.max(12, b.answers[0].length + 4, (b.placeholder ?? '').length + 2)}ch`
+            : '28ch',
+        }}
       />
     )
   }
