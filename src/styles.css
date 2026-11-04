@@ -82,6 +82,7 @@ code, pre { font-family: var(--mono); }
 .btn:hover:not(:disabled) { border-color: var(--accent); }
 .btn.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn.small { font-size: 13px; padding: 2px 10px; }
 .linkbtn { background: none; border: 0; padding: 0; font: inherit; font-size: 13px; color: var(--accent); cursor: pointer; }
 .linkbtn:hover { text-decoration: underline; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }

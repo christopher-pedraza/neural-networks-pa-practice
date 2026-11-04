@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { Question } from '../types'
 import { FillBlank } from './FillBlank'
 import { FindFix } from './FindFix'
@@ -15,6 +16,9 @@ interface Props {
 const TYPE_LABEL = { fill_blank: 'Fill in the blanks', find_fix: 'Identify & correct' } as const
 
 export function QuestionView({ q, onGraded, onNext, onOpenReference, showPlaceholders = true }: Props) {
+  // The related APIs name the functions you need to recall, so they stay hidden until asked for (per question).
+  const [relatedShown, setRelatedShown] = useState(false)
+  const related = q.related_reference ?? []
   return (
     <article className="question">
       <header className="q-header">
@@ -32,14 +36,22 @@ export function QuestionView({ q, onGraded, onNext, onOpenReference, showPlaceho
         <p>{q.description}</p>
       </section>
 
-      {q.related_reference && q.related_reference.length > 0 && (
+      {related.length > 0 && (
         <div className="related">
-          Related:
-          {q.related_reference.map((name) => (
-            <button key={name} type="button" className="chip link" onClick={() => onOpenReference(name)}>
-              {name}
-            </button>
-          ))}
+          <button
+            type="button"
+            className="btn small"
+            aria-expanded={relatedShown}
+            onClick={() => setRelatedShown((v) => !v)}
+          >
+            📚 {relatedShown ? 'Hide related APIs' : `Show related APIs (${related.length})`}
+          </button>
+          {relatedShown &&
+            related.map((name) => (
+              <button key={name} type="button" className="chip link" onClick={() => onOpenReference(name)}>
+                {name}
+              </button>
+            ))}
         </div>
       )}
 

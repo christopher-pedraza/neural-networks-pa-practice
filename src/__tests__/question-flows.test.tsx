@@ -141,8 +141,10 @@ describe('find_fix', () => {
     expect(screen.getByText(/all errors found and fixed/)).toBeInTheDocument()
   })
 
-  it('related-reference chips call back', async () => {
+  it('related APIs are hidden until revealed (per question), then chips call back', async () => {
     const { user, onOpenReference } = setup('mnist-eval-bugs-01')
+    expect(screen.queryByRole('button', { name: 'torch.no_grad' })).toBeNull()
+    await user.click(screen.getByRole('button', { name: /Show related APIs \(3\)/ }))
     await user.click(screen.getByRole('button', { name: 'torch.no_grad' }))
     expect(onOpenReference).toHaveBeenCalledWith('torch.no_grad')
   })
